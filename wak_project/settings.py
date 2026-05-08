@@ -1,12 +1,15 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-t6r()=nzf5zk34^imp4=3#wmuaqsa1q0dc#xe&qolw-=g(ur9v'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['abdullahsyeddd.pythonanywhere.com']
+ALLOWED_HOSTS = ['abdullahsyeddd.pythonanywhere.com','*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -109,6 +112,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'syedabdullah4775@gmail.com' 
-
-EMAIL_HOST_PASSWORD = 'hhsbhhfbpnymqerf'
+# Ab password aur email seedha .env file se aayega!
+EMAIL_HOST_USER = os.getenv('EMAIL_USER') 
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')

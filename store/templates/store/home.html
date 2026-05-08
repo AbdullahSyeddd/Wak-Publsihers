@@ -289,14 +289,13 @@
 
                     <div class="mt-4 pt-4 border-t border-gray-100">
                         <div class="flex items-center justify-between mb-4">
-                            {% if book.discount_price %}
+                        {% if book.discount_price %}
                                 <div>
                                     <span class="book-price-main">Rs. {{ book.discount_price }}</span>
                                     <span class="book-price-old">Rs. {{ book.price }}</span>
                                 </div>
                                 <span class="book-discount-pct">
-                                    {% widthratio book.discount_price book.price 100 as pct %}
-                                    Save {{ 100|add:"-"|add:pct }}%
+                                    Save <script>document.write(Math.round((({{ book.price }} - {{ book.discount_price }}) / {{ book.price }}) * 100));</script>%
                                 </span>
                             {% else %}
                                 <span class="book-price-main">Rs. {{ book.price }}</span>
