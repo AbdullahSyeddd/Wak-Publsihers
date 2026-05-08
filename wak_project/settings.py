@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-t6r()=nzf5zk34^imp4=3#wmuaqsa1q0dc#xe&qolw-=g(ur9v
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['abdullahsyeddd.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -111,4 +111,4 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'syedabdullah4775@gmail.com' 
 
-EMAIL_HOST_PASSWORD = 'hhsb hhfb pnym qerf'
+EMAIL_HOST_PASSWORD = 'hhsbhhfbpnymqerf'

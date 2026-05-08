@@ -165,7 +165,7 @@ def checkout(request):
 
             subject = f"Order Confirmation - WAK Publishers (Order #{order.id})"
             from_email = settings.EMAIL_HOST_USER
-            to_emails = ['70145461@student.uol.edu.pk'] # ----- RECEIVER ADMIN MAIL -------- 
+            to_emails = ['abdullahsyed2326@gmail.com'] # ----- RECEIVER ADMIN MAIL -------- 
             if request.user.is_authenticated and request.user.email:
                 to_emails.append(request.user.email)
 
