@@ -1,0 +1,953 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+/* ---- Page Background ---- */
+.checkout-page-bg {
+    background: linear-gradient(160deg, #f0f9ff 0%, #f7fafc 50%, #eef2ff 100%);
+    min-height: 100vh;
+}
+
+/* ---- Page Header ---- */
+.checkout-header {
+    background: linear-gradient(135deg, #0f1f5c 0%, #1e3a8a 55%, #1e5090 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 44px 0 54px;
+}
+.checkout-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+.checkout-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 5%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+.checkout-header-wave {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    line-height: 0;
+}
+.checkout-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(56,189,248,0.15);
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 50px;
+    padding: 6px 16px;
+    color: #38bdf8;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+.checkout-badge-dot {
+    width: 7px; height: 7px;
+    background: #38bdf8;
+    border-radius: 50%;
+    animation: dotPulse 2s infinite;
+}
+@keyframes dotPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(56,189,248,0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(56,189,248,0); }
+}
+.checkout-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+.checkout-breadcrumb a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+.checkout-breadcrumb a:hover { color: #38bdf8; }
+.checkout-breadcrumb .active { color: #38bdf8; }
+
+/* ---- Step Indicator ---- */
+.steps-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 20px;
+}
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+.step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+    transition: all 0.3s;
+}
+.step-circle--done {
+    background: #38bdf8;
+    color: white;
+    box-shadow: 0 4px 14px rgba(56,189,248,0.4);
+}
+.step-circle--active {
+    background: white;
+    color: #1e3a8a;
+    box-shadow: 0 4px 20px rgba(255,255,255,0.3);
+}
+.step-circle--pending {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.4);
+    border: 2px solid rgba(255,255,255,0.15);
+}
+.step-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+.step-label--done, .step-label--active { color: rgba(255,255,255,0.85); }
+.step-label--pending { color: rgba(255,255,255,0.35); }
+.step-connector {
+    width: 60px; height: 2px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 8px;
+    margin-bottom: 22px;
+    flex-shrink: 0;
+}
+.step-connector--done { background: rgba(56,189,248,0.5); }
+
+/* ---- Main Layout ---- */
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: start;
+}
+@media (min-width: 1024px) {
+    .checkout-grid {
+        grid-template-columns: 1fr 400px;
+    }
+}
+
+/* ---- Card Base ---- */
+.checkout-card {
+    background: white;
+    border-radius: 22px;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 2px 16px rgba(30,58,138,0.06);
+    overflow: hidden;
+}
+.checkout-card-header {
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #f8faff, #f0f9ff);
+}
+.checkout-card-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.checkout-card-icon--blue { background: #dbeafe; color: #1e3a8a; }
+.checkout-card-icon--green { background: #dcfce7; color: #16a34a; }
+.checkout-card-icon--orange { background: #ffedd5; color: #ea580c; }
+.checkout-card-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    font-family: 'Playfair Display', serif;
+}
+.checkout-card-sub {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 1px;
+}
+.checkout-card-body { padding: 24px; }
+
+/* ---- Order Summary Panel ---- */
+.order-panel {
+    background: linear-gradient(150deg, #0f1f5c 0%, #1e3a8a 55%, #1e5090 100%);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 16px 50px rgba(15,31,92,0.35);
+    position: sticky;
+    top: 96px;
+}
+.order-panel::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+.order-item-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.order-item-row:last-child { border-bottom: none; }
+.order-item-img {
+    width: 52px;
+    min-width: 52px;
+    height: 66px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.order-item-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.order-item-title {
+    font-size: 0.87rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1.35;
+}
+.order-item-qty {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    background: rgba(56,189,248,0.18);
+    color: #38bdf8;
+    border: 1px solid rgba(56,189,248,0.25);
+    padding: 2px 8px;
+    border-radius: 50px;
+    margin-top: 4px;
+}
+.order-item-price {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: white;
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: 'DM Sans', sans-serif;
+}
+.order-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.order-summary-row:last-of-type { border-bottom: none; }
+.order-summary-label {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+}
+.order-summary-label i {
+    width: 26px; height: 26px;
+    background: rgba(56,189,248,0.1);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #38bdf8;
+    font-size: 0.68rem;
+}
+.order-summary-val { color: white; font-weight: 800; font-size: 0.9rem; }
+.order-total-label {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #38bdf8;
+    display: flex; align-items: center; gap: 8px;
+}
+.order-total-val {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+}
+
+/* ---- Payment Method Cards ---- */
+.payment-option {
+    border: 2px solid #e2e8f0;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.3s;
+    background: white;
+}
+.payment-option--easypaisa-active {
+    border-color: #41b04b;
+    box-shadow: 0 0 0 4px rgba(65,176,75,0.1), 0 8px 28px rgba(65,176,75,0.12);
+}
+.payment-option--jazzcash-active {
+    border-color: #ed1c24;
+    box-shadow: 0 0 0 4px rgba(237,28,36,0.08), 0 8px 28px rgba(237,28,36,0.1);
+}
+.payment-option-header {
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+}
+.payment-radio-custom {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+.payment-radio-custom--easypaisa { border-color: #41b04b; background: #41b04b; }
+.payment-radio-custom--jazzcash  { border-color: #ed1c24; background: #ed1c24; }
+.payment-radio-custom i { color: white; font-size: 0.65rem; }
+.payment-method-name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+.payment-badge-ep {
+    background: #41b04b;
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 50px;
+}
+.payment-badge-jc {
+    background: #ed1c24;
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 50px;
+}
+
+/* Payment Details Panel */
+.payment-details-panel {
+    padding: 0 20px 20px;
+    border-top: 1px solid #f1f5f9;
+}
+.payment-info-card {
+    background: #f8faff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+.payment-info-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+}
+.payment-info-accent--ep { background: linear-gradient(180deg, #41b04b, #2d8a35); }
+.payment-info-accent--jc { background: linear-gradient(180deg, #ed1c24, #b0131a); }
+.payment-info-instruction {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+.payment-info-line {
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.payment-info-number {
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+.payment-info-number--ep { color: #41b04b; }
+.payment-info-number--jc { color: #ed1c24; }
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.copy-btn:hover {
+    background: #1e3a8a;
+    color: white;
+    border-color: #1e3a8a;
+}
+
+/* ---- Form Fields ---- */
+.form-field-group { margin-bottom: 18px; }
+.form-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+}
+.form-label span { color: #ef4444; margin-left: 2px; }
+.form-input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 13px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.25s;
+    background: #fafbff;
+}
+.form-input:focus {
+    border-color: #38bdf8;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.1);
+}
+.form-input::placeholder { color: #94a3b8; }
+textarea.form-input { resize: none; }
+.form-input-icon-wrap {
+    position: relative;
+}
+.form-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #38bdf8;
+    font-size: 0.82rem;
+    pointer-events: none;
+}
+.form-input-icon-wrap .form-input { padding-left: 40px; }
+
+/* ---- Error Alert ---- */
+.error-alert {
+    background: #fff5f5;
+    border: 1.5px solid #fecaca;
+    border-left: 4px solid #ef4444;
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.error-alert-icon {
+    width: 36px; height: 36px;
+    background: #fee2e2;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #ef4444;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.error-alert-title { font-size: 0.88rem; font-weight: 800; color: #dc2626; }
+.error-alert-msg   { font-size: 0.82rem; color: #ef4444; font-weight: 500; margin-top: 2px; }
+
+/* ---- Submit Button ---- */
+.submit-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 17px 24px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 8px 28px rgba(56,189,248,0.4);
+    letter-spacing: 0.02em;
+    font-family: 'DM Sans', sans-serif;
+}
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #0ea5e9, #1e3a8a);
+    box-shadow: 0 12px 36px rgba(56,189,248,0.5);
+    transform: translateY(-2px);
+}
+.submit-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ---- Security Badges ---- */
+.security-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 16px;
+    flex-wrap: wrap;
+}
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+.security-item i { color: #38bdf8; font-size: 0.82rem; }
+
+/* ---- Animations ---- */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.checkout-card { animation: fadeSlideUp 0.45s ease both; }
+.checkout-card:nth-child(1) { animation-delay: 0.05s; }
+.checkout-card:nth-child(2) { animation-delay: 0.12s; }
+.checkout-card:nth-child(3) { animation-delay: 0.19s; }
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+    .steps-bar { gap: 0; }
+    .step-connector { width: 32px; }
+    .step-label { font-size: 0.6rem; }
+}
+</style>
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="checkout-header">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        <!-- Breadcrumb -->
+        <div class="checkout-breadcrumb">
+            <a href="{% url 'home' %}"><i class="fas fa-home text-[10px]"></i> Home</a>
+            <i class="fas fa-chevron-right text-[9px]"></i>
+            <a href="{% url 'cart_page' %}">Cart</a>
+            <i class="fas fa-chevron-right text-[9px]"></i>
+            <span class="active">Checkout</span>
+        </div>
+
+        <div class="checkout-badge-pill">
+            <span class="checkout-badge-dot"></span>
+            Secure Checkout
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white display-font tracking-tight">
+            Complete Your <span style="color:#38bdf8;">Order</span>
+        </h1>
+        <p class="text-white/55 mt-2 font-medium text-sm">
+            You're just one step away from your books!
+        </p>
+
+        <!-- Step Indicator -->
+        <div class="steps-bar mt-8">
+            <div class="step-item">
+                <div class="step-circle step-circle--done"><i class="fas fa-check text-xs"></i></div>
+                <span class="step-label step-label--done">Cart</span>
+            </div>
+            <div class="step-connector step-connector--done"></div>
+            <div class="step-item">
+                <div class="step-circle step-circle--active"><i class="fas fa-credit-card text-xs"></i></div>
+                <span class="step-label step-label--active">Checkout</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-circle step-circle--pending"><i class="fas fa-check text-xs"></i></div>
+                <span class="step-label step-label--pending">Confirmed</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="checkout-header-wave">
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f7fafc"/>
+        </svg>
+    </div>
+</div>
+<!-- ===== /PAGE HEADER ===== -->
+
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="checkout-page-bg">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-20">
+
+        <form method="POST" action="{% url 'checkout' %}" id="checkout-form" onsubmit="disableSubmitButton()" x-data="{ payment: 'Easypaisa' }">
+            {% csrf_token %}
+
+            <div class="checkout-grid">
+
+                <!-- ===== LEFT COLUMN ===== -->
+                <div class="space-y-6">
+
+                    <!-- Error Message -->
+                    {% if error_message %}
+                    <div class="error-alert">
+                        <div class="error-alert-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <p class="error-alert-title">Payment Verification Failed</p>
+                            <p class="error-alert-msg">{{ error_message }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- ===== PAYMENT METHOD CARD ===== -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-header">
+                            <div class="checkout-card-icon checkout-card-icon--blue">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <p class="checkout-card-title">Payment Method</p>
+                                <p class="checkout-card-sub">Choose how you'd like to pay</p>
+                            </div>
+                        </div>
+                        <div class="checkout-card-body space-y-4">
+
+                            <!-- EASYPAISA -->
+                            <div class="payment-option" :class="payment === 'Easypaisa' ? 'payment-option--easypaisa-active' : ''">
+                                <div class="payment-option-header" @click="payment = 'Easypaisa'">
+                                    <div class="payment-radio-custom" :class="payment === 'Easypaisa' ? 'payment-radio-custom--easypaisa' : ''">
+                                        <i class="fas fa-check" x-show="payment === 'Easypaisa'"></i>
+                                    </div>
+                                    <input type="radio" name="payment_method" value="Easypaisa" x-model="payment" class="hidden">
+                                    <span class="payment-method-name">Easypaisa</span>
+                                    <span class="payment-badge-ep">easypaisa</span>
+                                </div>
+
+                                <div x-show="payment === 'Easypaisa'"
+                                     x-transition:enter="transition ease-out duration-250"
+                                     x-transition:enter-start="opacity-0 -translate-y-2"
+                                     x-transition:enter-end="opacity-100 translate-y-0"
+                                     class="payment-details-panel">
+
+                                    <div class="payment-info-card">
+                                        <div class="payment-info-accent payment-info-accent--ep"></div>
+                                        <p class="payment-info-instruction">
+                                            Complete your EasyPaisa payment first, then fill the details below.
+                                        </p>
+                                        <p class="payment-info-line">Account Holder: <strong style="color:#1e293b;">Wajid Ali</strong></p>
+                                        <p class="payment-info-line">EasyPaisa Personal Number:</p>
+                                        <div class="payment-info-number payment-info-number--ep">
+                                            03313529333
+                                            <button type="button" class="copy-btn" onclick="copyText('03313529333', this)">
+                                                <i class="fas fa-copy"></i> Copy
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div class="form-field-group mb-0">
+                                            <label class="form-label">Easypay Number <span>*</span></label>
+                                            <div class="form-input-icon-wrap">
+                                                <i class="fas fa-mobile-alt form-input-icon"></i>
+                                                <input type="text" name="sender_number" placeholder="030XXXXXXXX"
+                                                       :required="payment === 'Easypaisa'"
+                                                       :disabled="payment !== 'Easypaisa'"
+                                                       class="form-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-field-group mb-0">
+                                            <label class="form-label">Transaction ID <span>*</span></label>
+                                            <div class="form-input-icon-wrap">
+                                                <i class="fas fa-hashtag form-input-icon"></i>
+                                                <input type="text" name="transaction_id" placeholder="189876579287"
+                                                       :required="payment === 'Easypaisa'"
+                                                       :disabled="payment !== 'Easypaisa'"
+                                                       class="form-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- JAZZCASH -->
+                            <div class="payment-option" :class="payment === 'JazzCash' ? 'payment-option--jazzcash-active' : ''">
+                                <div class="payment-option-header" @click="payment = 'JazzCash'">
+                                    <div class="payment-radio-custom" :class="payment === 'JazzCash' ? 'payment-radio-custom--jazzcash' : ''">
+                                        <i class="fas fa-check" x-show="payment === 'JazzCash'"></i>
+                                    </div>
+                                    <input type="radio" name="payment_method" value="JazzCash" x-model="payment" class="hidden">
+                                    <span class="payment-method-name">JazzCash</span>
+                                    <span class="payment-badge-jc">JazzCash</span>
+                                </div>
+
+                                <div x-show="payment === 'JazzCash'"
+                                     x-transition:enter="transition ease-out duration-250"
+                                     x-transition:enter-start="opacity-0 -translate-y-2"
+                                     x-transition:enter-end="opacity-100 translate-y-0"
+                                     class="payment-details-panel">
+
+                                    <div class="payment-info-card">
+                                        <div class="payment-info-accent payment-info-accent--jc"></div>
+                                        <p class="payment-info-instruction">
+                                            Complete your JazzCash payment first, then fill the details below.
+                                        </p>
+                                        <p class="payment-info-line">Account Holder: <strong style="color:#1e293b;">Wajid Ali</strong></p>
+                                        <p class="payment-info-line">JazzCash Number:</p>
+                                        <div class="payment-info-number payment-info-number--jc">
+                                            03313529333
+                                            <button type="button" class="copy-btn" onclick="copyText('03313529333', this)">
+                                                <i class="fas fa-copy"></i> Copy
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div class="form-field-group mb-0">
+                                            <label class="form-label">JazzCash Number <span>*</span></label>
+                                            <div class="form-input-icon-wrap">
+                                                <i class="fas fa-mobile-alt form-input-icon"></i>
+                                                <input type="text" name="sender_number" placeholder="030XXXXXXXX"
+                                                       :required="payment === 'JazzCash'"
+                                                       :disabled="payment !== 'JazzCash'"
+                                                       class="form-input">
+                                            </div>
+                                        </div>
+                                        <div class="form-field-group mb-0">
+                                            <label class="form-label">Transaction ID (TID) <span>*</span></label>
+                                            <div class="form-input-icon-wrap">
+                                                <i class="fas fa-hashtag form-input-icon"></i>
+                                                <input type="text" name="transaction_id" placeholder="00000000000"
+                                                       :required="payment === 'JazzCash'"
+                                                       :disabled="payment !== 'JazzCash'"
+                                                       class="form-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ===== /PAYMENT METHOD CARD ===== -->
+
+
+                    <!-- ===== SHIPPING INFO CARD ===== -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-header">
+                            <div class="checkout-card-icon checkout-card-icon--green">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div>
+                                <p class="checkout-card-title">Shipping Information</p>
+                                <p class="checkout-card-sub">Where should we deliver your order?</p>
+                            </div>
+                        </div>
+                        <div class="checkout-card-body space-y-4">
+
+                            <div class="form-field-group mb-0">
+                                <label class="form-label">Full Name <span>*</span></label>
+                                <div class="form-input-icon-wrap">
+                                    <i class="fas fa-user form-input-icon"></i>
+                                    <input type="text" name="full_name" required placeholder="Enter Your Full Name" class="form-input">
+                                </div>
+                            </div>
+
+                            <div class="form-field-group mb-0">
+                                <label class="form-label">Phone Number <span>*</span></label>
+                                <div class="form-input-icon-wrap">
+                                    <i class="fas fa-phone form-input-icon"></i>
+                                    <input type="text" name="phone_number" required placeholder="E.g., 03XXXXXXXXX" class="form-input">
+                                </div>
+                            </div>
+
+                            <div class="form-field-group mb-0">
+                                <label class="form-label">Complete Delivery Address <span>*</span></label>
+                                <div class="form-input-icon-wrap">
+                                    <i class="fas fa-map-marker-alt form-input-icon" style="top: 18px; transform: none;"></i>
+                                    <textarea name="address" rows="3" required placeholder="House #, Street, Area, City..." class="form-input"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ===== /SHIPPING INFO CARD ===== -->
+
+                    <!-- Submit Button (visible on mobile below cards, hidden on desktop) -->
+                    <div class="lg:hidden">
+                        <button type="submit" id="submit-btn-mobile" class="submit-btn">
+                            <i id="btn-icon-mobile" class="fas fa-lock text-sm"></i>
+                            <span id="btn-text-mobile">Complete Secure Order</span>
+                            <i id="btn-spinner-mobile" class="fas fa-spinner fa-spin hidden"></i>
+                        </button>
+                        <div class="security-row mt-4">
+                            <span class="security-item"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                            <span class="security-item"><i class="fas fa-lock"></i> Safe & Private</span>
+                            <span class="security-item"><i class="fas fa-headset"></i> 24/7 Support</span>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- ===== /LEFT COLUMN ===== -->
+
+
+                <!-- ===== RIGHT COLUMN: ORDER SUMMARY ===== -->
+                <div class="relative">
+                    <div class="order-panel p-7 relative">
+
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mb-6 relative z-10">
+                            <h2 class="text-xl font-extrabold text-white display-font">Your Order</h2>
+                            <div class="w-9 h-9 rounded-xl bg-[rgba(56,189,248,0.12)] border border-[rgba(56,189,248,0.2)] flex items-center justify-center">
+                                <i class="fas fa-receipt text-[#38bdf8] text-sm"></i>
+                            </div>
+                        </div>
+
+                        <!-- Items List -->
+                        <div class="relative z-10 mb-4">
+                            {% for item in cart_items %}
+                            <div class="order-item-row">
+                                <div class="order-item-img">
+                                    {% if item.book.get_image %}
+                                        <img src="{{ item.book.get_image }}" alt="{{ item.book.title }}">
+                                    {% else %}
+                                        <i class="fas fa-book text-[#38bdf8]/50 text-lg"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="order-item-title">{{ item.book.title }}</p>
+                                    <span class="order-item-qty">Qty: {{ item.quantity }}</span>
+                                </div>
+                                <span class="order-item-price">
+                                    Rs. {% widthratio item.book.discount_price|default:item.book.price 1 item.quantity %}
+                                </span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Totals -->
+                        <div class="relative z-10 border-t border-white/10 pt-4 mb-4">
+                            <div class="order-summary-row">
+                                <span class="order-summary-label">
+                                    <i class="fas fa-box"></i> Subtotal
+                                </span>
+                                <span class="order-summary-val">Rs. {{ subtotal }}</span>
+                            </div>
+                            <div class="order-summary-row">
+                                <span class="order-summary-label">
+                                    <i class="fas fa-truck"></i> Shipping
+                                </span>
+                                <span class="order-summary-val">Rs. {{ shipping }}</span>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 mt-2 border-t border-white/10">
+                                <span class="order-total-label"><i class="fas fa-star text-xs"></i> Total</span>
+                                <span class="order-total-val">Rs. {{ total_amount }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button (Desktop only) -->
+                        <div class="hidden lg:block relative z-10 mt-6">
+                            <button type="submit" id="submit-btn" class="submit-btn">
+                                <i id="btn-icon" class="fas fa-lock text-sm"></i>
+                                <span id="btn-text">Complete Secure Order</span>
+                                <i id="btn-spinner" class="fas fa-spinner fa-spin hidden"></i>
+                            </button>
+                            <div class="security-row mt-4">
+                                <span class="security-item"><i class="fas fa-shield-alt"></i> SSL Secured</span>
+                                <span class="security-item"><i class="fas fa-lock"></i> Safe & Private</span>
+                            </div>
+                        </div>
+
+                        <!-- Free Shipping Note -->
+                        <div class="relative z-10 mt-5 flex items-center gap-3 bg-[rgba(56,189,248,0.1)] border border-[rgba(56,189,248,0.2)] rounded-14 p-3 rounded-xl">
+                            <i class="fas fa-truck text-[#38bdf8] text-sm flex-shrink-0"></i>
+                            <span class="text-[rgba(255,255,255,0.65)] text-xs font-600 font-semibold">
+                                Free delivery on orders above <strong style="color:#38bdf8;">Rs 1,500</strong>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <!-- Back to Cart Link -->
+                    <div class="text-center mt-5">
+                        <a href="{% url 'cart_page' %}" class="inline-flex items-center gap-2 text-[#1e3a8a] font-semibold text-sm hover:text-[#38bdf8] transition-colors group">
+                            <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform text-[#38bdf8] text-xs"></i>
+                            Back to Cart
+                        </a>
+                    </div>
+                </div>
+                <!-- ===== /RIGHT COLUMN ===== -->
+
+            </div>
+        </form>
+
+    </div>
+</div>
+<!-- ===== /MAIN CONTENT ===== -->
+
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+function disableSubmitButton() {
+    // Target both desktop & mobile buttons
+    ['submit-btn', 'submit-btn-mobile'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+    });
+
+    ['btn-text', 'btn-text-mobile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = 'Processing Payment...';
+    });
+    ['btn-icon', 'btn-icon-mobile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+    ['btn-spinner', 'btn-spinner-mobile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+    });
+}
+
+function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        btn.style.background = '#1e3a8a';
+        btn.style.color = 'white';
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+            btn.style.color = '';
+        }, 2000);
+    });
+}
+</script>
+
+{% endblock %}
+
+<!-- ===== DONE ===== -->

@@ -1,0 +1,1061 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% csrf_token %}
+
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-section relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="hero-bg absolute inset-0 z-0"></div>
+    <div class="hero-orb hero-orb-1 absolute z-0"></div>
+    <div class="hero-orb hero-orb-2 absolute z-0"></div>
+    <div class="hero-orb hero-orb-3 absolute z-0"></div>
+    <!-- Floating Particles -->
+    <div class="particles-container absolute inset-0 z-0 pointer-events-none">
+        <span class="particle" style="--x:10%;--y:20%;--d:3s;--size:6px"></span>
+        <span class="particle" style="--x:25%;--y:70%;--d:5s;--size:4px"></span>
+        <span class="particle" style="--x:45%;--y:15%;--d:4s;--size:8px"></span>
+        <span class="particle" style="--x:65%;--y:50%;--d:6s;--size:5px"></span>
+        <span class="particle" style="--x:80%;--y:25%;--d:3.5s;--size:7px"></span>
+        <span class="particle" style="--x:90%;--y:75%;--d:4.5s;--size:4px"></span>
+        <span class="particle" style="--x:55%;--y:85%;--d:5.5s;--size:6px"></span>
+    </div>
+
+    <div class="relative z-10 max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 lg:py-32">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+
+            <!-- LEFT: Text Content -->
+            <div class="flex-1 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
+
+                <!-- Eyebrow Badge -->
+                <div class="hero-badge inline-flex items-center gap-2 mb-6 animate-fade-in-up" style="animation-delay:0.1s">
+                    <span class="badge-pulse"></span>
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-[#38bdf8]">Pakistan's #1 Educational Publisher</span>
+                </div>
+
+                <!-- Main Headline -->
+                <h1 class="hero-headline display-font mb-6 animate-fade-in-up" style="animation-delay:0.2s">
+                    Excel in Every
+                    <span class="hero-highlight relative inline-block">
+                        Exam
+                        <svg class="underline-svg absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                            <path d="M2 9 Q50 2, 100 6 Q150 10, 198 3" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" fill="none" class="svg-draw"/>
+                        </svg>
+                    </span>
+                    <br>With WAK Publishers
+                </h1>
+
+                <!-- Subheading -->
+                <p class="hero-sub mb-10 animate-fade-in-up" style="animation-delay:0.3s">
+                    Trusted by <strong>100,000+ students</strong> across Pakistan. Premium notes, guide books, and study materials for Matric, Intermediate & MDCAT.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-wrap justify-center lg:justify-start gap-4 animate-fade-in-up" style="animation-delay:0.4s">
+                    <a href="{% url 'home' %}" class="hero-btn-primary">
+                        <i class="fas fa-book-open"></i>
+                        Browse All Books
+                    </a>
+                    <a href="{% url 'category_detail' 'mdcat' %}" class="hero-btn-secondary">
+                        <i class="fas fa-stethoscope"></i>
+                        MDCAT Prep
+                    </a>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="hero-stats flex flex-wrap justify-center lg:justify-start gap-6 mt-12 animate-fade-in-up" style="animation-delay:0.5s">
+                    <div class="stat-item">
+                        <span class="stat-num">500+</span>
+                        <span class="stat-label">Books</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">100K+</span>
+                        <span class="stat-label">Students</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num">20+</span>
+                        <span class="stat-label">Years Trust</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Book Stack Visual -->
+            <div class="flex-shrink-0 relative animate-float hero-visual-wrap hidden lg:block">
+                <div class="hero-glow-ring"></div>
+                <div class="book-stack">
+                    <!-- Category Cards floating around -->
+                    <div class="floating-card card-matric animate-float-slow">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Matric</span>
+                    </div>
+                    <div class="floating-card card-inter animate-float-slower">
+                        <i class="fas fa-book"></i>
+                        <span>Intermediate</span>
+                    </div>
+                    <div class="floating-card card-mdcat animate-float">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>MDCAT</span>
+                    </div>
+
+                    <!-- Central Hero Graphic -->
+                    <div class="hero-center-badge">
+                        <div class="hero-logo-ring">
+                            <img src="/assets/WAK-LOGO.png" alt="WAK Publishers" class="brightness-0 invert h-20 w-auto object-contain mx-auto">
+                            <p class="mt-3 text-white/80 text-sm font-semibold tracking-wide">Est. Since Decades</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Wave Separator -->
+    <div class="hero-wave absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f7fafc"/>
+        </svg>
+    </div>
+</section>
+<!-- ===== /HERO SECTION ===== -->
+
+
+<!-- ===== CATEGORY QUICK LINKS ===== -->
+<section class="py-10 bg-[#f7fafc]">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+
+            <a href="{% url 'category_detail' 'class-9' %}" class="cat-pill">
+                <div class="cat-pill-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <p class="cat-pill-title">Class 9</p>
+                    <p class="cat-pill-sub">Matric</p>
+                </div>
+            </a>
+            <a href="{% url 'category_detail' 'class-10' %}" class="cat-pill">
+                <div class="cat-pill-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <p class="cat-pill-title">Class 10</p>
+                    <p class="cat-pill-sub">Matric</p>
+                </div>
+            </a>
+            <a href="{% url 'category_detail' 'inter-part-1-all' %}" class="cat-pill cat-pill--gold">
+                <div class="cat-pill-icon"><i class="fas fa-star"></i></div>
+                <div>
+                    <p class="cat-pill-title">Inter Part I</p>
+                    <p class="cat-pill-sub">F.Sc / ICS</p>
+                </div>
+            </a>
+            <a href="{% url 'category_detail' 'inter-part-2-all' %}" class="cat-pill cat-pill--gold">
+                <div class="cat-pill-icon"><i class="fas fa-star"></i></div>
+                <div>
+                    <p class="cat-pill-title">Inter Part II</p>
+                    <p class="cat-pill-sub">F.Sc / ICS</p>
+                </div>
+            </a>
+            <a href="{% url 'category_detail' 'mdcat' %}" class="cat-pill cat-pill--red col-span-2 sm:col-span-1">
+                <div class="cat-pill-icon"><i class="fas fa-stethoscope"></i></div>
+                <div>
+                    <p class="cat-pill-title">MDCAT</p>
+                    <p class="cat-pill-sub">Medical Entry</p>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+<!-- ===== /CATEGORY QUICK LINKS ===== -->
+
+
+<!-- ===== MAIN BOOKS SECTION ===== -->
+<div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Section Header -->
+    <div class="flex items-end justify-between mb-8">
+        <div>
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#38bdf8] mb-2">Our Collection</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-[#1e3a8a] display-font">Latest Books</h2>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500">
+            <i class="fas fa-box-open text-[#38bdf8]"></i>
+            Showing all books
+        </div>
+    </div>
+
+    <!-- ===== PREMIUM FILTER BAR ===== -->
+    <div class="filter-bar mb-10">
+        <form id="filterForm" method="GET" action="{% url 'home' %}">
+
+            <!-- Search -->
+            <div class="filter-search-wrap">
+                <i class="fas fa-search filter-search-icon"></i>
+                <input type="text" id="searchInput" name="q" value="{{ request.GET.q }}"
+                       placeholder="Search books, notes, guides..."
+                       autocomplete="off"
+                       class="filter-search-input">
+                <div class="filter-search-kbd">⌘K</div>
+            </div>
+
+            <!-- Divider -->
+            <div class="filter-sep hidden md:block"></div>
+
+            <!-- Category Select -->
+            <div class="filter-select-wrap">
+                <i class="fas fa-layer-group filter-select-icon"></i>
+                <select id="categorySelect" name="category" class="filter-select">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <i class="fas fa-chevron-down filter-select-arrow"></i>
+            </div>
+
+            <!-- Divider -->
+            <div class="filter-sep hidden md:block"></div>
+
+            <!-- Sort Select -->
+            <div class="filter-select-wrap">
+                <i class="fas fa-sort-amount-down filter-select-icon"></i>
+                <select id="sortSelect" name="sort" class="filter-select">
+                    <option value="default">Default Sorting</option>
+                    <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low → High</option>
+                    <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High → Low</option>
+                </select>
+                <i class="fas fa-chevron-down filter-select-arrow"></i>
+            </div>
+
+            <!-- Divider -->
+            <div class="filter-sep hidden lg:block"></div>
+
+            <!-- View Toggle -->
+            <div class="hidden lg:flex items-center gap-1.5 pl-2">
+                <button type="button" id="btn-list" onclick="setView('list')"
+                        class="view-toggle-btn" title="2 Column View">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button type="button" id="btn-grid3" onclick="setView('grid3')"
+                        class="view-toggle-btn" title="3 Column Grid">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button type="button" id="btn-grid4" onclick="setView('grid4')"
+                        class="view-toggle-btn view-toggle-btn--active" title="4 Column Grid">
+                    <i class="fas fa-th"></i>
+                </button>
+            </div>
+
+        </form>
+    </div>
+    <!-- ===== /PREMIUM FILTER BAR ===== -->
+
+    <!-- Books Grid Wrapper -->
+    <div id="books-wrapper" class="transition-opacity duration-300">
+        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
+
+            {% for book in books %}
+            <!-- Book Card -->
+            <div class="book-card group flex flex-col">
+                <a href="{% url 'book_detail' book.slug %}" class="book-card-img-wrap relative overflow-hidden">
+                    <img src="{{ book.get_image }}" alt="{{ book.title }}"
+                         class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
+                    <div class="book-card-overlay"></div>
+
+                    {% if book.stock <= 0 %}
+                        <div class="book-badge book-badge--out">Out of Stock</div>
+                    {% elif book.discount_price %}
+                        <div class="book-badge book-badge--sale">
+                            <i class="fas fa-bolt text-[9px]"></i> Sale
+                        </div>
+                    {% endif %}
+
+                    <!-- Quick View on Hover -->
+                    <div class="book-quick-view">
+                        <i class="fas fa-eye mr-1.5"></i> Quick View
+                    </div>
+                </a>
+
+                <div class="book-card-body flex flex-col flex-grow">
+                    <span class="book-cat-tag">{{ book.category.name }}</span>
+
+                    <a href="{% url 'book_detail' book.slug %}" class="block mt-3 mb-auto">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                    </a>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            {% if book.discount_price %}
+                                <div>
+                                    <span class="book-price-main">Rs. {{ book.discount_price }}</span>
+                                    <span class="book-price-old">Rs. {{ book.price }}</span>
+                                </div>
+                                <span class="book-discount-pct">
+                                    {% widthratio book.discount_price book.price 100 as pct %}
+                                    Save {{ 100|add:"-"|add:pct }}%
+                                </span>
+                            {% else %}
+                                <span class="book-price-main">Rs. {{ book.price }}</span>
+                            {% endif %}
+                        </div>
+
+                        {% if book.stock > 0 %}
+                            <button onclick="addToCart({{ book.id }})" class="book-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        {% else %}
+                            <button disabled class="book-cart-btn book-cart-btn--disabled">
+                                <i class="fas fa-ban"></i>
+                                <span>Out of Stock</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center">
+                <div class="empty-state-icon mx-auto mb-6">
+                    <i class="fas fa-search text-4xl text-[#38bdf8]"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#1e3a8a] mb-2">No Books Found</h3>
+                <p class="text-gray-500">Try adjusting your search or browse a different category.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+<!-- ===== /MAIN BOOKS SECTION ===== -->
+
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed top-24 right-5 z-[70] flex flex-col gap-2"></div>
+
+
+<!-- ===== STYLES ===== -->
+<style>
+/* -------- HERO -------- */
+.hero-section {
+    background: linear-gradient(140deg, #0f1f5c 0%, #1e3a8a 45%, #1e5090 75%, #0f4c81 100%);
+    min-height: 580px;
+}
+.hero-bg {
+    background: radial-gradient(ellipse at 60% 50%, rgba(56,189,248,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 80%, rgba(30,58,138,0.6) 0%, transparent 50%);
+}
+.hero-orb {
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+}
+.hero-orb-1 {
+    width: 500px; height: 500px;
+    top: -150px; right: -100px;
+    background: radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%);
+    animation: orbPulse 8s ease-in-out infinite;
+}
+.hero-orb-2 {
+    width: 300px; height: 300px;
+    bottom: -80px; left: 10%;
+    background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%);
+    animation: orbPulse 10s ease-in-out infinite reverse;
+}
+.hero-orb-3 {
+    width: 200px; height: 200px;
+    top: 30%; left: 40%;
+    background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%);
+    animation: orbPulse 12s ease-in-out infinite;
+}
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+}
+
+/* Particles */
+.particle {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--size);
+    height: var(--size);
+    background: rgba(56,189,248,0.5);
+    border-radius: 50%;
+    animation: floatParticle var(--d) ease-in-out infinite alternate;
+}
+@keyframes floatParticle {
+    from { transform: translateY(0) scale(1); opacity: 0.4; }
+    to   { transform: translateY(-30px) scale(1.3); opacity: 0.9; }
+}
+
+/* Hero Badge */
+.hero-badge {
+    background: rgba(56,189,248,0.12);
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 50px;
+    padding: 6px 16px;
+}
+.badge-pulse {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #38bdf8;
+    border-radius: 50%;
+    animation: badgePulse 2s infinite;
+}
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0.4); }
+    50%       { box-shadow: 0 0 0 6px rgba(56,189,248,0); }
+}
+
+/* Headline */
+.hero-headline {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+.hero-highlight { color: #38bdf8; }
+.underline-svg { display: block; }
+.svg-draw {
+    stroke-dasharray: 220;
+    stroke-dashoffset: 220;
+    animation: drawLine 1.2s ease forwards 0.8s;
+}
+@keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+}
+
+.hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.75;
+    max-width: 520px;
+}
+.hero-sub strong { color: #38bdf8; font-weight: 700; }
+
+/* CTA Buttons */
+.hero-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 13px 26px;
+    border-radius: 14px;
+    letter-spacing: 0.02em;
+    transition: all 0.3s;
+    box-shadow: 0 6px 24px rgba(56,189,248,0.4);
+}
+.hero-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(56,189,248,0.55);
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+}
+.hero-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 13px 26px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    letter-spacing: 0.02em;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+}
+.hero-btn-secondary:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
+    transform: translateY(-2px);
+}
+
+/* Stats */
+.stat-item { display: flex; flex-direction: column; gap: 2px; }
+.stat-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+}
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.stat-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255,255,255,0.15);
+    align-self: center;
+}
+
+/* Floating Visual */
+.hero-visual-wrap {
+    width: 380px;
+    height: 380px;
+    position: relative;
+}
+.hero-glow-ring {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    border: 1px solid rgba(56,189,248,0.2);
+    animation: ringPulse 4s ease-in-out infinite;
+}
+@keyframes ringPulse {
+    0%,100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.06); opacity: 1; }
+}
+.book-stack { width: 100%; height: 100%; position: relative; }
+.hero-center-badge {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(56,189,248,0.25);
+    border-radius: 24px;
+    width: 220px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.hero-logo-ring img { filter: drop-shadow(0 0 20px rgba(56,189,248,0.4)); }
+.floating-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 10px 16px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.floating-card i { color: #38bdf8; font-size: 1rem; }
+.card-matric { top: 8%; right: -10%; }
+.card-inter { bottom: 12%; right: -5%; }
+.card-mdcat { top: 38%; left: -12%; }
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 0.7s ease forwards;
+}
+@keyframes floatAnim {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+@keyframes floatAnimSlow {
+    0%,100% { transform: translateY(0px) rotate(-1deg); }
+    50% { transform: translateY(-16px) rotate(1deg); }
+}
+@keyframes floatAnimSlower {
+    0%,100% { transform: translateY(0px) rotate(1deg); }
+    50% { transform: translateY(-8px) rotate(-1deg); }
+}
+.animate-float { animation: floatAnim 4s ease-in-out infinite; }
+.animate-float-slow { animation: floatAnimSlow 5s ease-in-out infinite; }
+.animate-float-slower { animation: floatAnimSlower 6s ease-in-out infinite; }
+
+.hero-wave { line-height: 0; }
+
+/* -------- CATEGORY PILLS -------- */
+.cat-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px 18px;
+    transition: all 0.25s;
+    box-shadow: 0 2px 8px rgba(30,58,138,0.06);
+    text-decoration: none;
+}
+.cat-pill:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(30,58,138,0.13);
+    border-color: #38bdf8;
+}
+.cat-pill-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #1e3a8a;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: background 0.25s;
+}
+.cat-pill:hover .cat-pill-icon {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+}
+.cat-pill-title { font-size: 0.88rem; font-weight: 700; color: #1e3a8a; line-height: 1.2; }
+.cat-pill-sub { font-size: 0.72rem; color: #64748b; margin-top: 1px; }
+
+.cat-pill--gold .cat-pill-icon {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+}
+.cat-pill--gold:hover .cat-pill-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+.cat-pill--red .cat-pill-icon {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+}
+.cat-pill--red:hover .cat-pill-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+/* -------- FILTER BAR -------- */
+.filter-bar {
+    background: white;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(30,58,138,0.07);
+    overflow: hidden;
+}
+.filter-bar form {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+/* Search */
+.filter-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+}
+.filter-search-icon {
+    position: absolute;
+    left: 18px;
+    color: #38bdf8;
+    font-size: 0.85rem;
+    z-index: 1;
+}
+.filter-search-input {
+    width: 100%;
+    padding: 16px 18px 16px 44px;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    color: #1e3a8a;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    background: transparent;
+}
+.filter-search-input::placeholder { color: #94a3b8; font-weight: 400; }
+.filter-search-kbd {
+    position: absolute;
+    right: 14px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+}
+
+/* Separator */
+.filter-sep {
+    width: 1px;
+    height: 32px;
+    background: #e2e8f0;
+    flex-shrink: 0;
+}
+
+/* Select Wraps */
+.filter-select-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.filter-select-icon {
+    position: absolute;
+    left: 14px;
+    color: #38bdf8;
+    font-size: 0.8rem;
+    pointer-events: none;
+    z-index: 1;
+}
+.filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 16px 40px 16px 38px;
+    font-size: 0.875rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    min-width: 170px;
+}
+.filter-select-arrow {
+    position: absolute;
+    right: 12px;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    pointer-events: none;
+}
+
+/* View Toggles */
+.view-toggle-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    margin: 10px 0;
+}
+.view-toggle-btn:hover {
+    color: #1e3a8a;
+    background: #f0f9ff;
+    border-color: #bae6fd;
+}
+.view-toggle-btn--active {
+    color: #1e3a8a !important;
+    background: #f0f9ff !important;
+    border-color: #38bdf8 !important;
+}
+
+@media (max-width: 767px) {
+    .filter-bar form { flex-direction: column; }
+    .filter-search-wrap, .filter-select-wrap { width: 100%; }
+    .filter-select { width: 100%; border-top: 1px solid #f1f5f9; }
+}
+
+/* -------- BOOK CARDS -------- */
+.book-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 2px 12px rgba(30,58,138,0.06);
+    transition: all 0.32s cubic-bezier(0.4,0,0.2,1);
+}
+.book-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(30,58,138,0.15);
+    border-color: #bae6fd;
+}
+.book-card-img-wrap {
+    display: block;
+    width: 100%;
+    height: 280px;
+    background: #f8faff;
+    position: relative;
+}
+.book-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(30,58,138,0.5) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+.book-card:hover .book-card-overlay { opacity: 1; }
+
+.book-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border-radius: 50px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.book-badge--sale {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239,68,68,0.4);
+}
+.book-badge--out {
+    background: #1e293b;
+    color: rgba(255,255,255,0.85);
+}
+
+.book-quick-view {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: white;
+    color: #1e3a8a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 50px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.book-card:hover .book-quick-view {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.book-card-body { padding: 20px; }
+.book-cat-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #0ea5e9;
+    background: #f0f9ff;
+    padding: 4px 10px;
+    border-radius: 50px;
+}
+.book-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s;
+}
+.book-card:hover .book-title { color: #0ea5e9; }
+
+.book-price-main {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    font-family: 'Playfair Display', serif;
+}
+.book-price-old {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+    margin-left: 4px;
+    text-decoration-color: #ef4444;
+}
+.book-discount-pct {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #16a34a;
+    background: #f0fdf4;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+}
+
+.book-cart-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #1e3a8a, #1e5090);
+    color: white;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 13px 16px;
+    border-radius: 14px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+}
+.book-cart-btn:hover {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    box-shadow: 0 8px 24px rgba(56,189,248,0.4);
+    transform: translateY(-1px);
+}
+.book-cart-btn:active { transform: scale(0.97); }
+.book-cart-btn--disabled {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Empty State */
+.empty-state-icon {
+    width: 80px; height: 80px;
+    background: #f0f9ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+// 1. LIVE SEARCH & FILTER
+const filterForm = document.getElementById('filterForm');
+const searchInput = document.getElementById('searchInput');
+const wrapper = document.getElementById('books-wrapper');
+
+function fetchFilteredBooks() {
+    const url = new URL(filterForm.action);
+    const params = new URLSearchParams(new FormData(filterForm));
+    wrapper.style.opacity = '0.4';
+    fetch(`${url.pathname}?${params.toString()}`)
+        .then(r => r.text())
+        .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const newGrid = doc.getElementById('books-wrapper').innerHTML;
+            wrapper.innerHTML = newGrid;
+            wrapper.style.opacity = '1';
+            setView(currentView);
+            window.history.pushState({}, '', `${url.pathname}?${params.toString()}`);
+        });
+}
+
+let typingTimer;
+searchInput.addEventListener('input', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(fetchFilteredBooks, 400);
+});
+document.getElementById('categorySelect').addEventListener('change', fetchFilteredBooks);
+document.getElementById('sortSelect').addEventListener('change', fetchFilteredBooks);
+
+// 2. VIEW TOGGLE
+let currentView = localStorage.getItem('bookView') || 'grid4';
+
+function setView(view) {
+    currentView = view;
+    localStorage.setItem('bookView', view);
+    const grid = document.getElementById('books-grid');
+    if (!grid) return;
+
+    document.querySelectorAll('.view-toggle-btn').forEach(b => {
+        b.classList.remove('view-toggle-btn--active');
+    });
+
+    grid.className = 'grid gap-6 xl:gap-8 transition-all duration-300';
+
+    if (view === 'list') {
+        grid.classList.add('grid-cols-1', 'md:grid-cols-2');
+        const btn = document.getElementById('btn-list');
+        if(btn) btn.classList.add('view-toggle-btn--active');
+    } else if (view === 'grid3') {
+        grid.classList.add('grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3');
+        const btn = document.getElementById('btn-grid3');
+        if(btn) btn.classList.add('view-toggle-btn--active');
+    } else {
+        grid.classList.add('grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4');
+        const btn = document.getElementById('btn-grid4');
+        if(btn) btn.classList.add('view-toggle-btn--active');
+    }
+}
+window.addEventListener('DOMContentLoaded', () => setView(currentView));
+
+// 3. TOAST
+function showToast(message, type) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    const isSuccess = type === 'success';
+    toast.className = `toast-msg transform transition-all duration-300 translate-x-full opacity-0`;
+    toast.innerHTML = `
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isSuccess ? 'bg-[#38bdf8]/20' : 'bg-red-400/20'}">
+            <i class="fas ${isSuccess ? 'fa-check-circle text-[#38bdf8]' : 'fa-exclamation-circle text-red-400'}"></i>
+        </div>
+        ${message}
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
+    setTimeout(() => {
+        toast.classList.add('translate-x-full', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// 4. CART
+function getCookie(name) {
+    let v = null;
+    if (document.cookie) {
+        document.cookie.split(';').forEach(c => {
+            c = c.trim();
+            if (c.startsWith(name + '=')) v = decodeURIComponent(c.substring(name.length + 1));
+        });
+    }
+    return v;
+}
+const csrftoken = getCookie('csrftoken');
+
+function addToCart(bookId) {
+    fetch('{% url "add_to_cart" %}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        body: JSON.stringify({ 'book_id': bookId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast(data.message, 'success');
+            document.querySelectorAll('[id="cart-count"]').forEach(el => {
+                el.innerText = data.cart_count;
+                el.classList.add('scale-150', 'bg-green-500');
+                setTimeout(() => el.classList.remove('scale-150', 'bg-green-500'), 300);
+            });
+            document.querySelectorAll('[id="cart-total-price"]').forEach(el => {
+                el.innerText = data.cart_total;
+            });
+        } else {
+            showToast(data.message, 'error');
+            if (data.message && data.message.includes('login')) {
+                setTimeout(() => window.location.href = "{% url 'login' %}", 2000);
+            }
+        }
+    })
+    .catch(() => showToast("Something went wrong!", 'error'));
+}
+</script>
+
+{% endblock %}
+
+
+
+<!-- ===== DONE ===== -->

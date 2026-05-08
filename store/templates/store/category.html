@@ -1,0 +1,557 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% csrf_token %}
+
+<style>
+/* ---- Page Header ---- */
+.cat-header {
+    background: linear-gradient(135deg, #0f1f5c 0%, #1e3a8a 55%, #1e5090 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 48px 0 58px;
+}
+.cat-header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(56,189,248,0.14) 0%, transparent 70%);
+    pointer-events: none;
+}
+.cat-header::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: 8%;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+/* Floating particles */
+.cat-header-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(56,189,248,0.35);
+    pointer-events: none;
+    animation: particleFloat var(--dur) ease-in-out infinite alternate;
+}
+@keyframes particleFloat {
+    from { transform: translateY(0) scale(1); opacity: 0.4; }
+    to   { transform: translateY(-20px) scale(1.2); opacity: 0.85; }
+}
+.cat-header-wave {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    line-height: 0;
+}
+
+/* Breadcrumb */
+.cat-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.cat-breadcrumb a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+.cat-breadcrumb a:hover { color: #38bdf8; }
+.cat-breadcrumb .active { color: #38bdf8; }
+
+/* Category icon badge */
+.cat-icon-badge {
+    width: 64px; height: 64px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(56,189,248,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 18px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+    animation: iconPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+}
+@keyframes iconPop {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Header text */
+.cat-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(56,189,248,0.75);
+    margin-bottom: 10px;
+    animation: fadeUp 0.5s ease 0.2s both;
+}
+.cat-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #ffffff;
+    font-family: 'Playfair Display', serif;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    animation: fadeUp 0.5s ease 0.3s both;
+}
+.cat-title span { color: #38bdf8; }
+.cat-count-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(56,189,248,0.15);
+    border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 50px;
+    padding: 5px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #38bdf8;
+    animation: fadeUp 0.5s ease 0.4s both;
+}
+.cat-count-pill i { font-size: 0.7rem; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Page Background ---- */
+.cat-page-bg {
+    background: linear-gradient(160deg, #f0f9ff 0%, #f7fafc 60%, #eef2ff 100%);
+    min-height: 60vh;
+}
+
+/* ---- Book Cards ---- */
+.book-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 2px 12px rgba(30,58,138,0.06);
+    transition: all 0.32s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    flex-direction: column;
+    animation: cardSlideIn 0.45s ease both;
+}
+.book-card:nth-child(1) { animation-delay: 0.04s; }
+.book-card:nth-child(2) { animation-delay: 0.09s; }
+.book-card:nth-child(3) { animation-delay: 0.14s; }
+.book-card:nth-child(4) { animation-delay: 0.19s; }
+.book-card:nth-child(5) { animation-delay: 0.24s; }
+.book-card:nth-child(6) { animation-delay: 0.29s; }
+.book-card:nth-child(7) { animation-delay: 0.34s; }
+.book-card:nth-child(8) { animation-delay: 0.39s; }
+@keyframes cardSlideIn {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.book-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(30,58,138,0.15);
+    border-color: #bae6fd;
+}
+
+/* Image wrap */
+.book-img-wrap {
+    width: 100%;
+    height: 280px;
+    background: #f8faff;
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+.book-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.book-card:hover .book-img-wrap img { transform: scale(1.1); }
+
+/* Overlay on hover */
+.book-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(30,58,138,0.5) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+.book-card:hover .book-img-overlay { opacity: 1; }
+
+/* Quick view hover label */
+.book-quick-view {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: white;
+    color: #1e3a8a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: 50px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+}
+.book-card:hover .book-quick-view {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Badge */
+.book-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border-radius: 50px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.book-badge--sale {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 4px 12px rgba(239,68,68,0.4);
+}
+.book-badge--out {
+    background: #1e293b;
+    color: rgba(255,255,255,0.85);
+}
+
+/* Card body */
+.book-card-body {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.book-cat-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: #0ea5e9;
+    background: #f0f9ff;
+    padding: 4px 10px;
+    border-radius: 50px;
+    border: 1px solid #bae6fd;
+}
+.book-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 10px;
+    transition: color 0.2s;
+    font-family: 'Playfair Display', serif;
+}
+.book-card:hover .book-title { color: #0ea5e9; }
+.book-price-main {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #1e3a8a;
+    font-family: 'Playfair Display', serif;
+}
+.book-price-old {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+    text-decoration-color: #ef4444;
+    margin-left: 4px;
+}
+.book-cart-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #1e3a8a, #1e5090);
+    color: white;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 13px 16px;
+    border-radius: 14px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    font-family: 'DM Sans', sans-serif;
+}
+.book-cart-btn:hover {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    box-shadow: 0 8px 24px rgba(56,189,248,0.4);
+    transform: translateY(-1px);
+}
+.book-cart-btn:active { transform: scale(0.97); }
+.book-cart-btn--disabled {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+}
+.empty-state-icon {
+    width: 96px; height: 96px;
+    background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 8px 28px rgba(56,189,248,0.15);
+}
+.empty-state-icon i { font-size: 2.5rem; color: #38bdf8; }
+</style>
+
+<!-- ===== CATEGORY PAGE HEADER ===== -->
+<div class="cat-header">
+    <!-- Particles -->
+    <span class="cat-header-particle" style="width:7px;height:7px;top:18%;left:8%;--dur:3.5s;"></span>
+    <span class="cat-header-particle" style="width:5px;height:5px;top:60%;left:20%;--dur:5s;"></span>
+    <span class="cat-header-particle" style="width:8px;height:8px;top:25%;right:15%;--dur:4s;"></span>
+    <span class="cat-header-particle" style="width:4px;height:4px;top:70%;right:30%;--dur:6s;"></span>
+    <span class="cat-header-particle" style="width:6px;height:6px;top:40%;left:50%;--dur:4.5s;"></span>
+
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+
+        <!-- Breadcrumb -->
+        <div class="cat-breadcrumb justify-center">
+            <a href="{% url 'home' %}"><i class="fas fa-home text-[10px]"></i> Home</a>
+            <i class="fas fa-chevron-right text-[9px]"></i>
+            <span class="active">{{ category.name }}</span>
+        </div>
+
+        <!-- Category Icon -->
+        <div class="cat-icon-badge">
+            {% if 'matric' in category.slug or 'class' in category.slug %}
+                🎓
+            {% elif 'mdcat' in category.slug %}
+                🩺
+            {% elif 'practical' in category.slug %}
+                🔬
+            {% elif 'inter' in category.slug %}
+                📚
+            {% else %}
+                📖
+            {% endif %}
+        </div>
+
+        <!-- Eyebrow -->
+        <p class="cat-eyebrow">WAK Publishers Collection</p>
+
+        <!-- Title -->
+        <h1 class="cat-title">
+            <span>{{ category.name }}</span>
+        </h1>
+
+        <!-- Book count -->
+        <div class="cat-count-pill mx-auto">
+            <i class="fas fa-book"></i>
+            {{ books|length }} Book{{ books|length|pluralize }} Available
+        </div>
+    </div>
+
+    <!-- Wave -->
+    <div class="cat-header-wave">
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f7fafc"/>
+        </svg>
+    </div>
+</div>
+<!-- ===== /CATEGORY PAGE HEADER ===== -->
+
+
+<!-- ===== BOOKS GRID ===== -->
+<div class="cat-page-bg">
+    <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Section label row -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#38bdf8] mb-1">Browse</p>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-[#1e3a8a] display-font">{{ category.name }}</h2>
+            </div>
+            <a href="{% url 'home' %}" class="inline-flex items-center gap-2 text-sm font-700 font-semibold text-[#1e3a8a] hover:text-[#38bdf8] transition-colors group">
+                <i class="fas fa-arrow-left text-[#38bdf8] text-xs group-hover:-translate-x-1 transition-transform"></i>
+                All Books
+            </a>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
+
+            {% for book in books %}
+            <div class="book-card">
+                <!-- Image -->
+                <a href="{% url 'book_detail' book.slug %}" class="book-img-wrap">
+                    <img src="{{ book.get_image }}" alt="{{ book.title }}">
+                    <div class="book-img-overlay"></div>
+
+                    {% if book.stock <= 0 %}
+                        <div class="book-badge book-badge--out">
+                            <i class="fas fa-ban text-[9px]"></i> Out of Stock
+                        </div>
+                    {% elif book.discount_price %}
+                        <div class="book-badge book-badge--sale">
+                            <i class="fas fa-bolt text-[9px]"></i> Sale
+                        </div>
+                    {% endif %}
+
+                    <div class="book-quick-view">
+                        <i class="fas fa-eye mr-1"></i> Quick View
+                    </div>
+                </a>
+
+                <!-- Body -->
+                <div class="book-card-body">
+                    <span class="book-cat-tag">{{ book.category.name }}</span>
+
+                    <a href="{% url 'book_detail' book.slug %}" class="block mb-auto">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                    </a>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <!-- Pricing -->
+                        <div class="flex items-center gap-2 mb-4">
+                            {% if book.discount_price %}
+                                <span class="book-price-main">Rs. {{ book.discount_price }}</span>
+                                <span class="book-price-old">Rs. {{ book.price }}</span>
+                            {% else %}
+                                <span class="book-price-main">Rs. {{ book.price }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Cart Button -->
+                        {% if book.stock > 0 %}
+                            <button onclick="addToCart({{ book.id }})" class="book-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        {% else %}
+                            <button disabled class="book-cart-btn book-cart-btn--disabled">
+                                <i class="fas fa-ban"></i>
+                                <span>Out of Stock</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-[#1e3a8a] mb-3 display-font">No Books Yet</h3>
+                <p class="text-gray-500 text-base mb-8 max-w-sm mx-auto">
+                    This category doesn't have any books at the moment. Check back soon!
+                </p>
+                <a href="{% url 'home' %}" class="inline-flex items-center gap-2 bg-[#1e3a8a] text-white font-700 font-bold text-sm px-6 py-3 rounded-14 rounded-xl hover:bg-[#38bdf8] transition-all shadow-lg">
+                    <i class="fas fa-book-open"></i> Browse All Books
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+<!-- ===== /BOOKS GRID ===== -->
+
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed top-24 right-5 z-[70] flex flex-col gap-2"></div>
+
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+function showToast(message, type) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    const isSuccess = type === 'success';
+    toast.className = `toast-msg transform transition-all duration-300 translate-x-full opacity-0`;
+    toast.innerHTML = `
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isSuccess ? 'bg-[#38bdf8]/20' : 'bg-red-400/20'}">
+            <i class="fas ${isSuccess ? 'fa-check-circle text-[#38bdf8]' : 'fa-exclamation-circle text-red-400'}"></i>
+        </div>
+        ${message}
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
+    setTimeout(() => {
+        toast.classList.add('translate-x-full', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function addToCart(bookId) {
+    fetch('{% url "add_to_cart" %}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        body: JSON.stringify({ 'book_id': bookId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast(data.message, 'success');
+
+            document.querySelectorAll('[id="cart-count"]').forEach(el => {
+                el.innerText = data.cart_count;
+                el.classList.add('scale-150', 'bg-green-500');
+                setTimeout(() => el.classList.remove('scale-150', 'bg-green-500'), 300);
+            });
+            document.querySelectorAll('[id="cart-total-price"]').forEach(el => {
+                el.innerText = data.cart_total;
+            });
+        } else {
+            showToast(data.message, 'error');
+            if (data.message && data.message.includes('login')) {
+                setTimeout(() => window.location.href = "{% url 'login' %}", 2000);
+            }
+        }
+    })
+    .catch(() => showToast("Something went wrong!", 'error'));
+}
+</script>
+
+{% endblock %}
+
+
+<!-- ===== DONE ===== -->

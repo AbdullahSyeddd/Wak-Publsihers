@@ -1,0 +1,825 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+/* ---- Page Background ---- */
+.detail-page-bg {
+    background: linear-gradient(160deg, #f0f9ff 0%, #f7fafc 60%, #eef2ff 100%);
+    min-height: 100vh;
+}
+
+/* ---- Breadcrumb ---- */
+.detail-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 600;
+    flex-wrap: wrap;
+}
+.detail-breadcrumb a { color: #64748b; transition: color 0.2s; }
+.detail-breadcrumb a:hover { color: #38bdf8; }
+.detail-breadcrumb .crumb-active { color: #1e3a8a; font-weight: 700; }
+.detail-breadcrumb i { font-size: 0.6rem; color: #cbd5e1; }
+
+/* ---- Main Detail Card ---- */
+.detail-main-card {
+    background: white;
+    border-radius: 28px;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 4px 32px rgba(30,58,138,0.08);
+    overflow: hidden;
+    animation: cardFadeIn 0.5s ease both;
+}
+@keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.detail-main-card::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #0ea5e9, #38bdf8, transparent);
+}
+
+/* ---- Image Panel ---- */
+.detail-img-panel {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e8f4ff 50%, #f0f9ff 100%);
+    border-radius: 20px;
+    padding: 36px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+}
+.detail-img-panel::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+.detail-img-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -30px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(30,58,138,0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+.detail-book-img {
+    max-height: 460px;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(30,58,138,0.2));
+    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    z-index: 1;
+    animation: imgFloat 5s ease-in-out infinite;
+}
+@keyframes imgFloat {
+    0%,100% { transform: translateY(0px); }
+    50%      { transform: translateY(-10px); }
+}
+.detail-img-panel:hover .detail-book-img {
+    transform: scale(1.04) translateY(-6px);
+    animation-play-state: paused;
+}
+
+/* Sale badge */
+.detail-sale-badge {
+    position: absolute;
+    top: 20px; left: 20px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 50px;
+    box-shadow: 0 4px 14px rgba(239,68,68,0.4);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.detail-out-badge {
+    position: absolute;
+    top: 20px; left: 20px;
+    background: #1e293b;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 50px;
+    z-index: 5;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Thumbnail strip (decorative) */
+.img-panel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+}
+.img-panel-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(30,58,138,0.2);
+}
+.img-panel-dot--active {
+    background: #38bdf8;
+    width: 18px;
+    border-radius: 3px;
+}
+
+/* ---- Details Panel ---- */
+.detail-info-panel {
+    padding: 36px 36px 36px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+@media (max-width: 767px) {
+    .detail-info-panel { padding: 28px 24px; }
+}
+
+.detail-cat-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #0ea5e9;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    padding: 5px 12px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    align-self: flex-start;
+}
+.detail-cat-tag i { font-size: 0.65rem; }
+
+.detail-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 900;
+    color: #1e3a8a;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    font-family: 'Playfair Display', serif;
+}
+.detail-author {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    font-weight: 600;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.detail-author strong { color: #1e3a8a; }
+.detail-author i { color: #38bdf8; font-size: 0.8rem; }
+
+/* Price block */
+.detail-price-block {
+    background: linear-gradient(135deg, #f8faff, #f0f9ff);
+    border: 1.5px solid #dbeafe;
+    border-radius: 18px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.detail-price-main {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #1e3a8a;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+}
+.detail-price-main--sale { color: #0ea5e9; }
+.detail-price-old {
+    font-size: 1rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+    text-decoration-color: #ef4444;
+    font-weight: 600;
+    margin-top: 4px;
+}
+.detail-save-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    color: #16a34a;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 10px;
+}
+
+/* Stock indicator */
+.detail-stock-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+.stock-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.stock-dot--in { background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); animation: stockPulse 2s infinite; }
+.stock-dot--out { background: #ef4444; }
+@keyframes stockPulse {
+    0%,100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+}
+.stock-text--in { color: #16a34a; }
+.stock-text--out { color: #ef4444; }
+
+/* Description */
+.detail-desc-block {
+    background: #f8faff;
+    border: 1px solid #e8f0fe;
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 24px;
+}
+.detail-desc-title {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #38bdf8;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.detail-desc-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #dbeafe;
+}
+.detail-desc-text {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.8;
+    font-weight: 400;
+}
+
+/* Feature pills */
+.detail-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+.detail-feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #475569;
+    transition: all 0.2s;
+}
+.detail-feature-pill i { color: #38bdf8; font-size: 0.72rem; }
+.detail-feature-pill:hover {
+    border-color: #bae6fd;
+    background: #f0f9ff;
+    color: #1e3a8a;
+}
+
+/* Action buttons */
+.detail-cart-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1e3a8a, #1e5090);
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 16px 28px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 22px rgba(30,58,138,0.28);
+    letter-spacing: 0.02em;
+    font-family: 'DM Sans', sans-serif;
+}
+.detail-cart-btn:hover {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    box-shadow: 0 10px 32px rgba(56,189,248,0.45);
+    transform: translateY(-2px);
+}
+.detail-cart-btn:active { transform: scale(0.97); }
+.detail-cart-btn--disabled {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+.detail-view-cat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: white;
+    color: #1e3a8a;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 2px solid #dbeafe;
+    transition: all 0.3s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.detail-view-cat-btn:hover {
+    background: #f0f9ff;
+    border-color: #38bdf8;
+    color: #0ea5e9;
+}
+
+/* ---- Trust Strip ---- */
+.trust-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+.trust-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 12px 8px;
+    background: #f8faff;
+    border-radius: 12px;
+    border: 1px solid #e8f0fe;
+}
+.trust-item i { color: #38bdf8; font-size: 1rem; }
+.trust-item span { font-size: 0.7rem; font-weight: 700; color: #64748b; line-height: 1.3; }
+
+/* ---- Suggested Books ---- */
+.suggested-section {
+    background: white;
+    border-radius: 28px;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 2px 20px rgba(30,58,138,0.06);
+    overflow: hidden;
+    margin-top: 32px;
+}
+.suggested-header {
+    background: linear-gradient(135deg, #0f1f5c, #1e3a8a);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.suggested-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.suggested-title i { color: #38bdf8; }
+.suggested-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: color 0.2s;
+    text-decoration: none;
+}
+.suggested-view-all:hover { color: #38bdf8; }
+.suggested-view-all i { font-size: 0.65rem; transition: transform 0.2s; }
+.suggested-view-all:hover i { transform: translateX(3px); }
+
+/* Suggested book card */
+.sug-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 2px 10px rgba(30,58,138,0.05);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    flex-direction: column;
+}
+.sug-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(30,58,138,0.13);
+    border-color: #bae6fd;
+}
+.sug-card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s;
+    display: block;
+    background: #f8faff;
+}
+.sug-card:hover .sug-card-img { transform: scale(1.07); }
+.sug-card-img-wrap {
+    overflow: hidden;
+    position: relative;
+}
+.sug-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(30,58,138,0.4) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+.sug-card:hover .sug-card-overlay { opacity: 1; }
+.sug-card-body {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.sug-cat-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #0ea5e9;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    padding: 3px 9px;
+    border-radius: 50px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+.sug-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: auto;
+    font-family: 'Playfair Display', serif;
+    transition: color 0.2s;
+}
+.sug-card:hover .sug-title { color: #0ea5e9; }
+.sug-price {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #1e3a8a;
+    font-family: 'Playfair Display', serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.sug-cart-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: linear-gradient(135deg, #1e3a8a, #1e5090);
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 11px 12px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+}
+.sug-cart-btn:hover {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    box-shadow: 0 6px 18px rgba(56,189,248,0.38);
+    transform: translateY(-1px);
+}
+.sug-cart-btn--disabled {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+</style>
+
+<div class="detail-page-bg">
+<div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-20">
+
+    <!-- ===== BREADCRUMB ===== -->
+    <nav class="detail-breadcrumb mb-8">
+        <a href="{% url 'home' %}"><i class="fas fa-home text-[10px]"></i> Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="{% url 'category_detail' book.category.slug %}">{{ book.category.name }}</a>
+        <i class="fas fa-chevron-right"></i>
+        <span class="crumb-active">{{ book.title }}</span>
+    </nav>
+
+    <!-- ===== MAIN DETAIL CARD ===== -->
+    <div class="detail-main-card">
+        <div class="flex flex-col md:flex-row gap-0">
+
+            <!-- LEFT: Image Panel -->
+            <div class="w-full md:w-[42%] p-6 md:p-8">
+                <div class="detail-img-panel">
+                    <img src="{{ book.get_image }}" alt="{{ book.title }}" class="detail-book-img">
+
+                    {% if book.stock <= 0 %}
+                        <div class="detail-out-badge"><i class="fas fa-ban text-[9px] mr-1"></i>Out of Stock</div>
+                    {% elif book.discount_price %}
+                        <div class="detail-sale-badge"><i class="fas fa-bolt text-[9px]"></i> Sale</div>
+                    {% endif %}
+
+                    <div class="img-panel-dots">
+                        <div class="img-panel-dot img-panel-dot--active"></div>
+                        <div class="img-panel-dot"></div>
+                        <div class="img-panel-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Info Panel -->
+            <div class="w-full md:w-[58%] detail-info-panel">
+
+                <!-- Category tag -->
+                <span class="detail-cat-tag">
+                    <i class="fas fa-bookmark"></i>
+                    {{ book.category.name }}
+                </span>
+
+                <!-- Title -->
+                <h1 class="detail-title">{{ book.title }}</h1>
+
+                <!-- Author -->
+                <p class="detail-author">
+                    <i class="fas fa-user-pen"></i>
+                    By <strong>{{ book.author }}</strong>
+                </p>
+
+                <!-- Price Block -->
+                <div class="detail-price-block">
+                    <div>
+                        {% if book.discount_price %}
+                            <div class="detail-price-main detail-price-main--sale">Rs {{ book.discount_price }}</div>
+                            <div class="detail-price-old">Rs {{ book.price }}</div>
+                        {% else %}
+                            <div class="detail-price-main">Rs {{ book.price }}</div>
+                        {% endif %}
+                    </div>
+                    {% if book.discount_price %}
+                        <div class="detail-save-badge">
+                            <i class="fas fa-tag text-[10px]"></i>
+                            You Save Rs {{ book.price|add:"-"|add:book.discount_price }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Stock -->
+                <div class="detail-stock-row">
+                    {% if book.stock > 0 %}
+                        <span class="stock-dot stock-dot--in"></span>
+                        <span class="stock-text--in">In Stock</span>
+                        <span style="color:#cbd5e1; font-size:0.75rem;">&bull;</span>
+                        <span style="color:#94a3b8; font-size:0.78rem;">Ready to ship</span>
+                    {% else %}
+                        <span class="stock-dot stock-dot--out"></span>
+                        <span class="stock-text--out">Out of Stock</span>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                <div class="detail-desc-block">
+                    <p class="detail-desc-title"><i class="fas fa-align-left text-[10px]"></i> Description</p>
+                    {% if book.description %}
+                        <div class="detail-desc-text">{{ book.description|linebreaks }}</div>
+                    {% else %}
+                        <p class="detail-desc-text italic" style="color:#cbd5e1;">No description available for this book.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Feature Pills -->
+                <div class="detail-features">
+                    <span class="detail-feature-pill"><i class="fas fa-truck"></i> Free Delivery over Rs 1500</span>
+                    <span class="detail-feature-pill"><i class="fas fa-shield-alt"></i> Authentic Book</span>
+                    <span class="detail-feature-pill"><i class="fas fa-undo"></i> Easy Returns</span>
+                    <span class="detail-feature-pill"><i class="fas fa-award"></i> WAK Verified</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 flex-wrap">
+                    {% if book.stock > 0 %}
+                        <button onclick="addToCart({{ book.id }})" class="detail-cart-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
+                    {% else %}
+                        <button disabled class="detail-cart-btn detail-cart-btn--disabled flex-1">
+                            <i class="fas fa-ban"></i>
+                            Out of Stock
+                        </button>
+                    {% endif %}
+                    <a href="{% url 'category_detail' book.category.slug %}" class="detail-view-cat-btn">
+                        <i class="fas fa-layer-group text-[#38bdf8]"></i>
+                        View Category
+                    </a>
+                </div>
+
+                <!-- Trust Strip -->
+                <div class="trust-strip">
+                    <div class="trust-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Checkout</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-headset"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-star"></i>
+                        <span>WAK Publishers</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ===== /MAIN DETAIL CARD ===== -->
+
+
+    <!-- ===== SUGGESTED BOOKS ===== -->
+    {% if suggested_books %}
+    <div class="suggested-section">
+        <div class="suggested-header">
+            <div class="suggested-title">
+                <i class="fas fa-sparkles"></i>
+                More from <span style="color:#38bdf8; margin-left:6px;">{{ book.category.name }}</span>
+            </div>
+            <a href="{% url 'category_detail' book.category.slug %}" class="suggested-view-all">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="p-6 md:p-8">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-5">
+                {% for sug in suggested_books %}
+                <div class="sug-card">
+                    <div class="sug-card-img-wrap">
+                        <a href="{% url 'book_detail' sug.slug %}">
+                            <img src="{{ sug.get_image }}" alt="{{ sug.title }}" class="sug-card-img">
+                        </a>
+                        <div class="sug-card-overlay"></div>
+                        {% if sug.discount_price %}
+                            <div style="position:absolute;top:8px;right:8px;background:linear-gradient(135deg,#ef4444,#dc2626);color:white;font-size:0.62rem;font-weight:800;padding:3px 8px;border-radius:50px;text-transform:uppercase;letter-spacing:0.06em;">
+                                Sale
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="sug-card-body">
+                        <span class="sug-cat-tag">{{ sug.category.name }}</span>
+                        <a href="{% url 'book_detail' sug.slug %}">
+                            <h3 class="sug-title">{{ sug.title }}</h3>
+                        </a>
+                        <div class="sug-price">
+                            {% if sug.discount_price %}
+                                Rs. {{ sug.discount_price }}
+                                <span style="font-size:0.75rem;color:#94a3b8;text-decoration:line-through;font-weight:600;margin-left:4px;">Rs. {{ sug.price }}</span>
+                            {% else %}
+                                Rs. {{ sug.price }}
+                            {% endif %}
+                        </div>
+                        {% if sug.stock > 0 %}
+                            <button onclick="addToCart({{ sug.id }})" class="sug-cart-btn">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        {% else %}
+                            <button disabled class="sug-cart-btn sug-cart-btn--disabled">
+                                <i class="fas fa-ban"></i> Out of Stock
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!-- ===== /SUGGESTED BOOKS ===== -->
+
+</div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed top-24 right-5 z-[70] flex flex-col gap-2"></div>
+
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+function showToast(message, type) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    const isSuccess = type === 'success';
+    toast.className = 'toast-msg transform transition-all duration-300 translate-x-full opacity-0';
+    toast.innerHTML = `
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isSuccess ? 'bg-[#38bdf8]/20' : 'bg-red-400/20'}">
+            <i class="fas ${isSuccess ? 'fa-check-circle text-[#38bdf8]' : 'fa-exclamation-circle text-red-400'}"></i>
+        </div>
+        ${message}
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
+    setTimeout(() => {
+        toast.classList.add('translate-x-full', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function addToCart(bookId) {
+    fetch('{% url "add_to_cart" %}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        body: JSON.stringify({ 'book_id': bookId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast(data.message, 'success');
+            document.querySelectorAll('[id="cart-count"]').forEach(el => {
+                el.innerText = data.cart_count;
+                el.classList.add('scale-150', 'bg-green-500');
+                setTimeout(() => el.classList.remove('scale-150', 'bg-green-500'), 300);
+            });
+            document.querySelectorAll('[id="cart-total-price"]').forEach(el => {
+                el.innerText = data.cart_total;
+            });
+        } else {
+            showToast(data.message, 'error');
+            if (data.message && data.message.includes('login')) {
+                setTimeout(() => window.location.href = "{% url 'login' %}", 2000);
+            }
+        }
+    })
+    .catch(() => showToast("Something went wrong!", 'error'));
+}
+</script>
+
+{% endblock %}

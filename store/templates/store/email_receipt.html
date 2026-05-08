@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt</title>
+    <style>
+        /* Mobile Responsive Styles */
+        @media only screen and (max-width: 600px) {
+            .main-container {
+                border-radius: 0 !important;
+                border-top: 6px solid #1e3a8a !important;
+            }
+            .content-wrapper {
+                padding: 20px 15px !important;
+            }
+            .header-wrapper {
+                padding: 30px 15px 15px !important;
+            }
+            .stack-column {
+                display: block !important;
+                width: 100% !important;
+                margin-bottom: 15px !important;
+            }
+            .gap-column {
+                display: none !important;
+            }
+            .total-table td {
+                font-size: 14px !important;
+            }
+            .total-amount-text {
+                font-size: 18px !important;
+            }
+            .item-text {
+                font-size: 14px !important;
+            }
+        }
+    </style>
+</head>
+<body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px 0;">
+    
+    <!-- Main Receipt Container -->
+    <div class="main-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-top: 8px solid #1e3a8a;">
+        
+        <!-- Header Section -->
+        <div class="header-wrapper" style="padding: 40px 30px 20px; text-align: center;">
+            <h1 style="color: #1e3a8a; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">WAK Publishers</h1>
+            <p style="color: #10b981; margin: 12px 0 0 0; font-size: 16px; font-weight: bold;">
+                ✓ Order Successfully Received
+            </p>
+            <p style="color: #64748b; margin: 6px 0 0 0; font-size: 14px;">
+                Receipt for Order <strong style="color: #1e293b;">#{{ order.id }}</strong>
+            </p>
+        </div>
+
+        <!-- Dashed Divider -->
+        <div style="border-top: 2px dashed #e2e8f0; margin: 10px 30px 20px;"></div>
+
+        <!-- Order Items Section -->
+        <div class="content-wrapper" style="padding: 0 30px;">
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 10px 0; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left; border-bottom: 2px solid #f1f5f9;">Item Description</th>
+                        <th style="padding: 10px 0; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; border-bottom: 2px solid #f1f5f9;">Qty</th>
+                        <th style="padding: 10px 0; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; text-align: right; border-bottom: 2px solid #f1f5f9;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td class="item-text" style="padding: 16px 0; color: #334155; font-size: 15px; border-bottom: 1px dashed #e2e8f0; font-weight: 500;">
+                            {{ item.book.title }}
+                        </td>
+                        <td class="item-text" style="padding: 16px 0; color: #64748b; font-size: 14px; text-align: center; border-bottom: 1px dashed #e2e8f0;">
+                            {{ item.quantity }}
+                        </td>
+                        <td class="item-text" style="padding: 16px 0; color: #1e3a8a; font-size: 15px; text-align: right; font-weight: bold; border-bottom: 1px dashed #e2e8f0;">
+                            Rs. {% widthratio item.book.discount_price|default:item.book.price 1 item.quantity %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Calculations / Totals -->
+            <table class="total-table" style="width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 30px;">
+                <tr>
+                    <td style="padding: 6px 0; text-align: right; color: #64748b; font-size: 14px; width: 70%;">Subtotal:</td>
+                    <td style="padding: 6px 0; text-align: right; color: #334155; font-size: 15px; font-weight: 500;">Rs. {{ subtotal }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 6px 0; text-align: right; color: #64748b; font-size: 14px;">Shipping:</td>
+                    <td style="padding: 6px 0; text-align: right; color: #334155; font-size: 15px; font-weight: 500;">Rs. {{ shipping }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 16px 0 0; text-align: right; color: #0f172a; font-size: 15px; font-weight: bold;">Total Amount:</td>
+                    <td class="total-amount-text" style="padding: 16px 0 0; text-align: right; color: #1e3a8a; font-size: 22px; font-weight: 900;">Rs. {{ order.total_amount }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Details Section (Responsive Stacking Cards) -->
+        <div class="content-wrapper" style="padding: 0 30px 30px; font-size: 0; text-align: center;">
+            
+            <!-- Shipping Card -->
+            <div class="stack-column" style="display: inline-block; width: 48%; vertical-align: top; text-align: left; font-size: 14px;">
+                <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; height: 100%; box-sizing: border-box;">
+                    <h3 style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">Shipping Information</h3>
+                    <p style="margin: 0 0 6px 0; color: #1e293b; font-size: 15px; font-weight: bold;">{{ order.full_name }}</p>
+                    <p style="margin: 0 0 8px 0; color: #64748b; font-size: 14px;">{{ order.phone_number }}</p>
+                    <p style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.5;">{{ order.shipping_address }}</p>
+                </div>
+            </div>
+
+            <!-- Gap between cards for Desktop -->
+            <div class="gap-column" style="display: inline-block; width: 4%; height: 1px;"></div>
+
+            <!-- Payment Card -->
+            <div class="stack-column" style="display: inline-block; width: 48%; vertical-align: top; text-align: left; font-size: 14px;">
+                <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; height: 100%; box-sizing: border-box;">
+                    <h3 style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px 0;">Payment Details</h3>
+                    
+                    <div style="margin-bottom: 12px;">
+                        <span style="font-size: 13px; color: #64748b;">Method:</span><br>
+                        <span style="display: inline-block; margin-top: 5px; background-color: {% if order.payment_method == 'Easypaisa' %}#10b981{% else %}#ef4444{% endif %}; color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; letter-spacing: 0.5px;">
+                            {{ order.payment_method }}
+                        </span>
+                    </div>
+                    
+                    <p style="margin: 0 0 6px 0; color: #64748b; font-size: 13px;">Sender No: <strong style="color: #1e293b;">{{ order.sender_number }}</strong></p>
+                    <p style="margin: 0; color: #64748b; font-size: 13px;">TID: <strong style="color: #1e293b;">{{ order.transaction_id }}</strong></p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Corrected Simple Footer Section -->
+        <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+            <p style="margin: 0; color: #94a3b8; font-size: 12px;">
+                &copy; 2024 WAK Publishers. All rights reserved.
+            </p>
+        </div>
+
+    </div> <!-- Added missing closing div here -->
+</body>
+</html>
+
+<!-- ===== DONE ===== -->

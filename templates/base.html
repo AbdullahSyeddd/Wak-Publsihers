@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAK Publishers - Bookshop</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandWhite: '#ffffff',
+                        brandSky: '#38bdf8',
+                        brandDarkBlue: '#1e3a8a',
+                        brandLight: '#f0f9ff',
+                        brandNavy: '#0f1f5c',
+                        brandGold: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sky: #38bdf8;
+            --dark-blue: #1e3a8a;
+            --navy: #0f1f5c;
+            --gold: #f59e0b;
+            --white: #ffffff;
+            --light: #f0f9ff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: #f7fafc;
+            color: #1e293b;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        h1, h2, h3, .display-font { font-family: 'Playfair Display', serif; }
+
+        /* ===== NAVBAR ===== */
+        .navbar-glass {
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(56,189,248,0.15);
+            box-shadow: 0 2px 30px rgba(30,58,138,0.08);
+        }
+
+        .top-bar {
+            background: linear-gradient(90deg, var(--navy) 0%, var(--dark-blue) 60%, #1e6fa8 100%);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 0.82rem;
+            letter-spacing: 0.03em;
+            padding: 6px 0;
+            transition: color 0.2s;
+            text-transform: uppercase;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--sky), #0ea5e9);
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: #0ea5e9; }
+
+        /* Mega dropdown */
+        .dropdown-panel {
+            background: white;
+            border-top: 3px solid var(--sky);
+            box-shadow: 0 20px 60px rgba(30,58,138,0.15), 0 4px 16px rgba(56,189,248,0.1);
+            border-radius: 0 0 16px 16px;
+            min-width: 200px;
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #334155;
+            transition: all 0.18s;
+            border-left: 3px solid transparent;
+        }
+        .dropdown-item:hover {
+            background: var(--light);
+            color: var(--dark-blue);
+            border-left-color: var(--sky);
+            padding-left: 24px;
+        }
+        .dropdown-item i {
+            width: 16px;
+            color: var(--sky);
+            font-size: 0.75rem;
+        }
+
+        /* Cart badge */
+        .cart-btn {
+            background: linear-gradient(135deg, var(--dark-blue), #1e5fa8);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(30,58,138,0.3);
+            letter-spacing: 0.02em;
+        }
+        .cart-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(30,58,138,0.45);
+            background: linear-gradient(135deg, #1e5fa8, var(--sky));
+        }
+
+        .logo-container {
+            position: relative;
+        }
+        .logo-container::before, .logo-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 1px;
+            width: 40px;
+            background: linear-gradient(90deg, transparent, var(--sky));
+        }
+        .logo-container::before { right: calc(100% + 12px); }
+        .logo-container::after {
+            left: calc(100% + 12px);
+            background: linear-gradient(90deg, var(--sky), transparent);
+        }
+
+        /* Mobile menu */
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 0.9rem;
+            border-radius: 10px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .mobile-nav-link:hover {
+            background: var(--light);
+            border-left-color: var(--sky);
+            color: #0ea5e9;
+        }
+        .mobile-nav-link i { width: 18px; color: var(--sky); }
+
+        /* ===== FOOTER ===== */
+        .footer-main {
+            background: linear-gradient(160deg, var(--navy) 0%, var(--dark-blue) 60%, #1e5090 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .footer-main::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .footer-main::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -60px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .footer-divider {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--sky), #0ea5e9, var(--sky), transparent);
+        }
+
+        .footer-social-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.75);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .footer-social-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--sky);
+            color: var(--sky);
+            background: rgba(56,189,248,0.12);
+            box-shadow: 0 6px 18px rgba(56,189,248,0.2);
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.65);
+            font-size: 0.87rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-link:hover {
+            color: var(--sky);
+            transform: translateX(4px);
+        }
+        .footer-link::before {
+            content: '';
+            width: 16px;
+            height: 1px;
+            background: var(--sky);
+            opacity: 0;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+        .footer-link:hover::before { opacity: 1; }
+
+        .footer-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 2px;
+            background: var(--sky);
+            border-radius: 2px;
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255,255,255,0.65);
+            font-size: 0.87rem;
+            margin-bottom: 10px;
+        }
+        .footer-contact-item i {
+            width: 32px;
+            height: 32px;
+            background: rgba(56,189,248,0.12);
+            border: 1px solid rgba(56,189,248,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sky);
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Newsletter input */
+        .newsletter-input {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px 0 0 10px;
+            padding: 10px 16px;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .newsletter-input::placeholder { color: rgba(255,255,255,0.4); }
+        .newsletter-input:focus { border-color: var(--sky); }
+        .newsletter-btn {
+            background: linear-gradient(135deg, var(--sky), #0ea5e9);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 0 10px 10px 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .newsletter-btn:hover { background: linear-gradient(135deg, #0ea5e9, var(--dark-blue)); }
+
+        /* Toast messages */
+        .toast-msg {
+            background: linear-gradient(135deg, var(--dark-blue), #1e5fa8);
+            border-left: 4px solid var(--sky);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(30,58,138,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 280px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- ===== TOP BAR ===== -->
+    <div class="top-bar py-2 px-4 hidden lg:block">
+        <div class="max-w-[96rem] mx-auto flex items-center justify-between text-xs">
+            <div class="flex items-center gap-6 text-white/75">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-phone text-[var(--sky)] text-[10px]"></i>
+                    +92 331 3529333
+                </span>
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-envelope text-[var(--sky)] text-[10px]"></i>
+                    info@wakpublishers.com
+                </span>
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-[var(--sky)] text-[10px]"></i>
+                    Urdu Bazar, Lahore
+                </span>
+            </div>
+            <div class="flex items-center gap-4 text-white/75">
+                <span class="flex items-center gap-1.5">
+                    <i class="fas fa-truck text-[var(--sky)] text-[10px]"></i>
+                    Free Delivery on Orders above Rs 1500
+                </span>
+                <span class="w-px h-3 bg-white/20"></span>
+                <a href="#" class="hover:text-[var(--sky)] transition flex items-center gap-1.5">
+                    <i class="fas fa-headset text-[10px]"></i> Support
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar-glass sticky top-0 z-50" x-data="{ mobileMenuOpen: false }">
+        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- DESKTOP NAVBAR -->
+            <div class="hidden lg:flex justify-between items-center h-[68px] w-full gap-4">
+                
+                <!-- LEFT LINKS -->
+                <div class="flex-1 flex justify-end items-center gap-5 xl:gap-7 pr-6 xl:pr-12">
+                    
+                    <a href="{% url 'home' %}" class="nav-link">Home</a>
+                    <a href="{% url 'home' %}" class="nav-link">All Books</a>
+
+                    <!-- Matric Dropdown -->
+                    <div class="relative group py-4">
+                        <a href="{% url 'category_detail' 'matric-all' %}" class="nav-link flex items-center gap-1.5">
+                            Matric
+                            <i class="fas fa-chevron-down text-[9px] opacity-60 group-hover:rotate-180 transition-transform duration-200"></i>
+                        </a>
+                        <div class="absolute left-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-1">
+                            <div class="dropdown-panel py-2">
+                                <a href="{% url 'category_detail' 'class-9' %}" class="dropdown-item">
+                                    <i class="fas fa-book-open"></i> Class 9
+                                </a>
+                                <a href="{% url 'category_detail' 'class-10' %}" class="dropdown-item">
+                                    <i class="fas fa-book-open"></i> Class 10
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intermediate Part-I Dropdown -->
+                    <div class="relative group py-4">
+                        <a href="{% url 'category_detail' 'inter-part-1-all' %}" class="nav-link flex items-center gap-1.5">
+                            Intermediate Part-I
+                            <i class="fas fa-chevron-down text-[9px] opacity-60 group-hover:rotate-180 transition-transform duration-200"></i>
+                        </a>
+                        <div class="absolute left-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-1">
+                            <div class="dropdown-panel py-2">
+                                <a href="{% url 'category_detail' 'inter-1-golden-notes' %}" class="dropdown-item">
+                                    <i class="fas fa-star"></i> Golden Notes
+                                </a>
+                                <a href="{% url 'category_detail' 'inter-1-read-pass' %}" class="dropdown-item">
+                                    <i class="fas fa-check-circle"></i> Read & Pass Notes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CENTER LOGO -->
+                <div class="flex-shrink-0 logo-container px-6">
+                    <a href="{% url 'home' %}" class="flex items-center justify-center group">
+                        <img src="/assets/WAK-LOGO.png" alt="WAK Publishers Logo"
+                             class="h-11 w-auto object-contain transition-all duration-300 group-hover:scale-105 drop-shadow-lg">
+                    </a>
+                </div>
+
+                <!-- RIGHT LINKS -->
+                <div class="flex-1 flex justify-start items-center gap-5 xl:gap-7 pl-6 xl:pl-12">
+
+                    <!-- Intermediate Part-II Dropdown -->
+                    <div class="relative group py-4">
+                        <a href="{% url 'category_detail' 'inter-part-2-all' %}" class="nav-link flex items-center gap-1.5">
+                            Intermediate Part-II
+                            <i class="fas fa-chevron-down text-[9px] opacity-60 group-hover:rotate-180 transition-transform duration-200"></i>
+                        </a>
+                        <div class="absolute left-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-1">
+                            <div class="dropdown-panel py-2">
+                                <a href="{% url 'category_detail' 'inter-2-golden-notes' %}" class="dropdown-item">
+                                    <i class="fas fa-star"></i> Golden Notes
+                                </a>
+                                <a href="{% url 'category_detail' 'inter-2-read-pass' %}" class="dropdown-item">
+                                    <i class="fas fa-check-circle"></i> Read & Pass Notes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'category_detail' 'mdcat' %}" class="nav-link">MDCAT</a>
+
+                    <!-- Practical Books Dropdown -->
+                    <div class="relative group py-4">
+                        <a href="{% url 'category_detail' 'all-practical-books' %}" class="nav-link flex items-center gap-1.5">
+                            Practical Books
+                            <i class="fas fa-chevron-down text-[9px] opacity-60 group-hover:rotate-180 transition-transform duration-200"></i>
+                        </a>
+                        <div class="absolute right-0 top-full opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pt-1">
+                            <div class="dropdown-panel py-2">
+                                <a href="{% url 'category_detail' 'matric-practical' %}" class="dropdown-item">
+                                    <i class="fas fa-flask"></i> Matric
+                                </a>
+                                <a href="{% url 'category_detail' 'intermediate-practical' %}" class="dropdown-item">
+                                    <i class="fas fa-flask"></i> Intermediate
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Separator -->
+                    <div class="h-7 w-px bg-gray-200 mx-1"></div>
+
+                    <!-- Action Icons -->
+                    <div class="flex items-center gap-3">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'logout' %}"
+                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200 shadow-sm text-sm"
+                               title="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}"
+                               class="w-9 h-9 flex items-center justify-center rounded-xl bg-[var(--light)] text-[var(--dark-blue)] hover:bg-[var(--sky)] hover:text-white transition-all duration-200 shadow-sm text-sm"
+                               title="Login">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        {% endif %}
+
+                        <!-- Cart -->
+                        <a href="{% url 'cart_page' %}" class="cart-btn">
+                            <div class="relative">
+                                <i class="fas fa-shopping-bag text-base"></i>
+                                <span id="cart-count"
+                                      class="absolute -top-2.5 -right-2.5 bg-[var(--sky)] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[17px] text-center leading-none shadow-sm">
+                                    {{ nav_cart_count|default:"0" }}
+                                </span>
+                            </div>
+                            <div class="border-l border-white/20 pl-2">
+                                <p class="text-sm font-bold leading-none">
+                                    Rs <span id="cart-total-price">{{ nav_cart_total|default:"0.00" }}</span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOBILE NAVBAR -->
+            <div class="flex lg:hidden justify-between items-center h-16 w-full">
+                <a href="{% url 'home' %}">
+                    <img src="/assets/WAK-LOGO.png" alt="WAK Publishers Logo" class="h-9 w-auto object-contain">
+                </a>
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'cart_page' %}" class="relative w-10 h-10 flex items-center justify-center bg-[var(--light)] rounded-xl text-[var(--dark-blue)] hover:bg-[var(--sky)] hover:text-white transition-all text-base">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-[var(--sky)] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-sm">
+                            {{ nav_cart_count|default:"0" }}
+                        </span>
+                    </a>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen"
+                            class="w-10 h-10 flex items-center justify-center bg-[var(--light)] rounded-xl text-[var(--dark-blue)] hover:bg-[var(--sky)] hover:text-white transition-all text-base">
+                        <i class="fas" :class="mobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="lg:hidden border-t border-gray-100 bg-white shadow-xl"
+             style="display: none;">
+            <div class="px-4 py-4 space-y-1">
+                <a href="{% url 'home' %}" class="mobile-nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="{% url 'home' %}" class="mobile-nav-link"><i class="fas fa-books"></i> All Books</a>
+                <a href="{% url 'category_detail' 'matric-all' %}" class="mobile-nav-link"><i class="fas fa-graduation-cap"></i> Matric</a>
+                <a href="{% url 'category_detail' 'inter-part-1-all' %}" class="mobile-nav-link"><i class="fas fa-book"></i> Intermediate Part-I</a>
+                <a href="{% url 'category_detail' 'inter-part-2-all' %}" class="mobile-nav-link"><i class="fas fa-book"></i> Intermediate Part-II</a>
+                <a href="{% url 'category_detail' 'mdcat' %}" class="mobile-nav-link"><i class="fas fa-stethoscope"></i> MDCAT</a>
+                <a href="{% url 'category_detail' 'all-practical-books' %}" class="mobile-nav-link"><i class="fas fa-flask"></i> Practical Books</a>
+                <div class="pt-2 border-t border-gray-100 mt-2">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="mobile-nav-link text-red-500">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="mobile-nav-link">
+                            <i class="fas fa-user"></i> Login / Register
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- ================= /NAVBAR ================= -->
+
+    <!-- ================= MESSAGES ================= -->
+    {% if messages %}
+        <div class="fixed top-24 right-5 z-[60] space-y-2">
+            {% for message in messages %}
+                <div class="toast-msg animate-pulse-once">
+                    <div class="w-8 h-8 bg-[var(--sky)]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-info-circle text-[var(--sky)]"></i>
+                    </div>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <div class="footer-divider"></div>
+    <footer class="footer-main text-white pt-14 pb-8">
+        <div class="max-w-[96rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+            <!-- Main Footer Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10 mb-12">
+
+<div class="xl:col-span-1">
+    <div class="mb-5">
+        <h2 class="text-3xl font-extrabold text-white mb-4 tracking-tight">WAK <span class="text-brandSky">Publishers</span></h2>
+        
+        <p class="text-white/60 text-sm leading-relaxed">
+            Pakistan's trusted source for quality educational books. Helping students achieve excellence since decades.
+        </p>
+    </div>
+    
+    <div class="flex gap-3 mt-6">
+        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#1877F2] hover:scale-110 transition-all duration-300" title="Facebook">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        
+        <a href="https://x.com/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-black hover:scale-110 transition-all duration-300" title="X">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:scale-110 transition-all duration-300" title="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+        
+        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#FF0000] hover:scale-110 transition-all duration-300" title="YouTube">
+            <i class="fab fa-youtube"></i>
+        </a>
+    </div>
+</div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'shipping_info' %}" class="footer-link hover:text-brandSky transition-colors duration-300">Shipping Information</a></li>
+                        <li><a href="{% url 'refund_policy' %}" class="footer-link hover:text-brandSky transition-colors duration-300">Return & Refund Policy</a></li>
+                        <li><a href="{% url 'login' %}" class="footer-link hover:text-brandSky transition-colors duration-300">My Account</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <h4 class="footer-heading">Categories</h4>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'category_detail' 'matric-all' %}" class="footer-link">Matric Books</a></li>
+                        <li><a href="{% url 'category_detail' 'inter-part-1-all' %}" class="footer-link">Intermediate Part-I</a></li>
+                        <li><a href="{% url 'category_detail' 'inter-part-2-all' %}" class="footer-link">Intermediate Part-II</a></li>
+                        <li><a href="{% url 'category_detail' 'mdcat' %}" class="footer-link">MDCAT</a></li>
+                        <li><a href="{% url 'category_detail' 'all-practical-books' %}" class="footer-link">Practical Books</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact + Newsletter -->
+                <div>
+                    <h4 class="footer-heading">Contact Us</h4>
+                    <div class="mb-6">
+                        <div class="footer-contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Main Branch, Urdu Bazar, Lahore</span>
+                        </div>
+                        <div class="footer-contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+92 331 3529333</span>
+                        </div>
+                        <div class="footer-contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@wakpublishers.com</span>
+                        </div>
+                        <div class="footer-contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Mon–Sat: 9:00 AM – 7:00 PM</span>
+                        </div>
+                    </div>
+                    <!-- Newsletter -->
+                    <p class="text-white/50 text-xs uppercase tracking-wider font-semibold mb-2">Stay Updated</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email address" class="newsletter-input">
+                        <button class="newsletter-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/40">
+                <p>&copy; 2026 WAK Publishers. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span>Secure Payments:</span>
+                    <div class="flex gap-2">
+                        <span class="bg-white/10 rounded px-2 py-1 text-xs font-bold">JazzCash</span>
+                        <span class="bg-white/10 rounded px-2 py-1 text-xs font-bold">EasyPaisa</span>
+                    </div>
+                </div>
+                <p>Designed By Abdullah Syed</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+
+
+<!-- ===== DONE ===== -->

@@ -1,0 +1,418 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+/* ---- Auth Page Background ---- */
+.auth-page-bg {
+    background: linear-gradient(160deg, #f0f9ff 0%, #f7fafc 50%, #eef2ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    position: relative;
+    overflow: hidden;
+}
+.auth-page-bg::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+.auth-orb-1 {
+    position: absolute;
+    top: 10%; left: 5%;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,58,138,0.06) 0%, transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+}
+.auth-orb-2 {
+    position: absolute;
+    bottom: 10%; right: 5%;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+}
+
+/* ---- Auth Card ---- */
+.auth-card {
+    background: white;
+    border-radius: 28px;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 8px 48px rgba(30,58,138,0.1), 0 2px 12px rgba(30,58,138,0.05);
+    width: 100%;
+    max-width: 460px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    animation: authCardIn 0.55s cubic-bezier(0.4,0,0.2,1) both;
+}
+@keyframes authCardIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.auth-card::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #0ea5e9, #38bdf8, transparent);
+}
+
+/* ---- Card Header ---- */
+.auth-card-header {
+    background: linear-gradient(140deg, #0f1f5c 0%, #1e3a8a 55%, #1e5090 100%);
+    padding: 36px 36px 44px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.auth-card-header::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+.auth-card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -30px;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Logo in header */
+.auth-logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+.auth-logo-ring {
+    width: 64px; height: 64px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(56,189,248,0.3);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    animation: logoRingIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+@keyframes logoRingIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+.auth-logo-ring i { font-size: 1.6rem; color: #38bdf8; }
+
+.auth-header-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.5s ease 0.25s both;
+}
+.auth-header-sub {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.5s ease 0.32s both;
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Wave separator */
+.auth-header-wave {
+    background: linear-gradient(140deg, #0f1f5c, #1e5090);
+    line-height: 0;
+}
+.auth-header-wave svg { display: block; width: 100%; }
+
+/* ---- Card Body ---- */
+.auth-card-body {
+    padding: 32px 32px 36px;
+    animation: fadeUp 0.5s ease 0.35s both;
+}
+@media (max-width: 480px) {
+    .auth-card-header { padding: 28px 24px 36px; }
+    .auth-card-body   { padding: 24px 20px 28px; }
+}
+
+/* ---- Error Alert ---- */
+.auth-error {
+    background: #fff5f5;
+    border: 1.5px solid #fecaca;
+    border-left: 4px solid #ef4444;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.auth-error-icon {
+    width: 30px; height: 30px;
+    background: #fee2e2;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #ef4444;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.auth-error-text { font-size: 0.84rem; font-weight: 600; color: #dc2626; }
+
+/* ---- Form Fields ---- */
+.auth-field { margin-bottom: 18px; }
+.auth-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 7px;
+    letter-spacing: 0.02em;
+}
+.auth-input-wrap { position: relative; }
+.auth-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #38bdf8;
+    font-size: 0.82rem;
+    pointer-events: none;
+    transition: color 0.2s;
+    z-index: 1;
+}
+.auth-input {
+    width: 100%;
+    padding: 13px 16px 13px 42px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 13px;
+    font-size: 0.92rem;
+    font-family: 'DM Sans', sans-serif;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.25s;
+    background: #fafbff;
+}
+.auth-input:focus {
+    border-color: #38bdf8;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.1);
+}
+.auth-input::placeholder { color: #94a3b8; }
+
+/* Password toggle */
+.auth-pw-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 1;
+    background: none;
+    border: none;
+    padding: 4px;
+}
+.auth-pw-toggle:hover { color: #1e3a8a; }
+
+/* ---- Submit Button ---- */
+.auth-submit-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 15px 24px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 22px rgba(56,189,248,0.38);
+    letter-spacing: 0.02em;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 8px;
+}
+.auth-submit-btn:hover {
+    background: linear-gradient(135deg, #0ea5e9, #1e3a8a);
+    box-shadow: 0 10px 32px rgba(56,189,248,0.48);
+    transform: translateY(-2px);
+}
+.auth-submit-btn:active { transform: scale(0.98); }
+
+/* ---- Divider ---- */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0;
+}
+.auth-divider-line { flex: 1; height: 1px; background: #f1f5f9; }
+.auth-divider-text { font-size: 0.72rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+/* ---- Footer text ---- */
+.auth-footer-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 20px;
+}
+.auth-footer-text a {
+    color: #0ea5e9;
+    font-weight: 700;
+    transition: color 0.2s;
+    text-decoration: none;
+}
+.auth-footer-text a:hover { color: #1e3a8a; text-decoration: underline; }
+
+/* ---- Trust row ---- */
+.auth-trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+}
+.auth-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+.auth-trust-item i { color: #38bdf8; font-size: 0.75rem; }
+</style>
+
+<div class="auth-page-bg">
+    <div class="auth-orb-1"></div>
+    <div class="auth-orb-2"></div>
+
+    <div class="auth-card">
+
+        <!-- Header -->
+        <div class="auth-card-header">
+            <div class="auth-logo-wrap">
+                <div class="auth-logo-ring">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <h2 class="auth-header-title">Welcome Back!</h2>
+            <p class="auth-header-sub">Login to your WAK Publishers account.</p>
+        </div>
+
+        <!-- Wave -->
+        <div class="auth-header-wave">
+            <svg viewBox="0 0 460 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="height:24px;">
+                <path d="M0,12 C115,24 345,0 460,12 L460,24 L0,24 Z" fill="white"/>
+            </svg>
+        </div>
+
+        <!-- Body -->
+        <div class="auth-card-body">
+
+            <!-- Error -->
+            {% if form.errors %}
+            <div class="auth-error">
+                <div class="auth-error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <p class="auth-error-text">Invalid username or password. Please try again.</p>
+            </div>
+            {% endif %}
+
+            <form method="post" class="space-y-0">
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="auth-field">
+                    <label class="auth-label">Username</label>
+                    <div class="auth-input-wrap">
+                        <i class="fas fa-user auth-input-icon"></i>
+                        <input type="text" name="username" required placeholder="Enter your username" class="auth-input">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="auth-field">
+                    <label class="auth-label">Password</label>
+                    <div class="auth-input-wrap">
+                        <i class="fas fa-lock auth-input-icon"></i>
+                        <input type="password" name="password" id="loginPassword" required placeholder="Enter your password" class="auth-input" style="padding-right:44px;">
+                        <button type="button" class="auth-pw-toggle" onclick="togglePw('loginPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit-btn">
+                    <i class="fas fa-sign-in-alt text-sm"></i>
+                    Login to Account
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <div class="auth-divider-line"></div>
+                <span class="auth-divider-text">New to WAK Publishers?</span>
+                <div class="auth-divider-line"></div>
+            </div>
+
+            <p class="auth-footer-text" style="margin-top:0;">
+                Don't have an account?
+                <a href="{% url 'signup' %}">Create one</a>
+            </p>
+
+            <div class="auth-trust-row">
+                <span class="auth-trust-item"><i class="fas fa-shield-alt"></i> Secure Login</span>
+                <span class="auth-trust-item"><i class="fas fa-lock"></i> SSL Protected</span>
+                <span class="auth-trust-item"><i class="fas fa-star"></i> WAK Publishers</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePw(id, btn) {
+    const input = document.getElementById(id);
+    const icon  = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+        btn.style.color = '#1e3a8a';
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+        btn.style.color = '';
+    }
+}
+</script>
+
+{% endblock %}

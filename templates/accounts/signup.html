@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+/* ---- Reuse same auth styles ---- */
+.auth-page-bg {
+    background: linear-gradient(160deg, #f0f9ff 0%, #f7fafc 50%, #eef2ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    position: relative;
+    overflow: hidden;
+}
+.auth-page-bg::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+.auth-orb-1 {
+    position: absolute;
+    top: 10%; left: 5%;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,58,138,0.06) 0%, transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+}
+.auth-orb-2 {
+    position: absolute;
+    bottom: 10%; right: 5%;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+}
+.auth-card {
+    background: white;
+    border-radius: 28px;
+    border: 1px solid #e8f0fe;
+    box-shadow: 0 8px 48px rgba(30,58,138,0.1), 0 2px 12px rgba(30,58,138,0.05);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    animation: authCardIn 0.55s cubic-bezier(0.4,0,0.2,1) both;
+}
+@keyframes authCardIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.auth-card::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #0ea5e9, #38bdf8, transparent);
+}
+.auth-card-header {
+    background: linear-gradient(140deg, #0f1f5c 0%, #1e3a8a 55%, #1e5090 100%);
+    padding: 32px 36px 42px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.auth-card-header::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+.auth-logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+}
+.auth-logo-ring {
+    width: 64px; height: 64px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(56,189,248,0.3);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    animation: logoRingIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+@keyframes logoRingIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+.auth-logo-ring i { font-size: 1.6rem; color: #38bdf8; }
+.auth-header-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 6px;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.5s ease 0.25s both;
+}
+.auth-header-sub {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.5s ease 0.32s both;
+    line-height: 1.5;
+    max-width: 300px;
+    margin: 0 auto;
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.auth-header-wave {
+    background: linear-gradient(140deg, #0f1f5c, #1e5090);
+    line-height: 0;
+}
+.auth-header-wave svg { display: block; width: 100%; }
+
+/* ---- Perks Strip ---- */
+.auth-perks {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+.auth-perk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 50px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #0ea5e9;
+}
+.auth-perk-pill i { font-size: 0.65rem; }
+
+/* ---- Card Body ---- */
+.auth-card-body {
+    padding: 28px 32px 32px;
+    animation: fadeUp 0.5s ease 0.35s both;
+}
+@media (max-width: 480px) {
+    .auth-card-header { padding: 26px 20px 38px; }
+    .auth-card-body   { padding: 22px 18px 26px; }
+}
+
+/* ---- Form Fields ---- */
+.auth-field { margin-bottom: 16px; }
+.auth-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+}
+.auth-input-wrap { position: relative; }
+.auth-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #38bdf8;
+    font-size: 0.8rem;
+    pointer-events: none;
+    z-index: 1;
+}
+.auth-input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 13px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.25s;
+    background: #fafbff;
+}
+.auth-input:focus {
+    border-color: #38bdf8;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.1);
+}
+.auth-input::placeholder { color: #94a3b8; }
+.auth-field-error {
+    font-size: 0.75rem;
+    color: #ef4444;
+    font-weight: 600;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.auth-field-error i { font-size: 0.7rem; }
+
+/* Password toggle */
+.auth-pw-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 1;
+    background: none;
+    border: none;
+    padding: 4px;
+}
+.auth-pw-toggle:hover { color: #1e3a8a; }
+
+/* ---- Submit Button ---- */
+.auth-submit-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 15px 24px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 6px 22px rgba(56,189,248,0.38);
+    letter-spacing: 0.02em;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 8px;
+}
+.auth-submit-btn:hover {
+    background: linear-gradient(135deg, #0ea5e9, #1e3a8a);
+    box-shadow: 0 10px 32px rgba(56,189,248,0.48);
+    transform: translateY(-2px);
+}
+.auth-submit-btn:active { transform: scale(0.98); }
+
+/* ---- Divider ---- */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+.auth-divider-line { flex: 1; height: 1px; background: #f1f5f9; }
+.auth-divider-text { font-size: 0.72rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+/* ---- Footer ---- */
+.auth-footer-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 0;
+}
+.auth-footer-text a {
+    color: #0ea5e9;
+    font-weight: 700;
+    transition: color 0.2s;
+    text-decoration: none;
+}
+.auth-footer-text a:hover { color: #1e3a8a; text-decoration: underline; }
+
+/* ---- Trust row ---- */
+.auth-trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+}
+.auth-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+.auth-trust-item i { color: #38bdf8; font-size: 0.75rem; }
+
+/* Field icon map */
+.field-icon-username::before  { content: '\f007'; }
+.field-icon-email::before     { content: '\f0e0'; }
+.field-icon-password::before  { content: '\f023'; }
+.field-icon-password1::before { content: '\f023'; }
+.field-icon-password2::before { content: '\f058'; }
+.field-icon-default::before   { content: '\f069'; }
+</style>
+
+<div class="auth-page-bg">
+    <div class="auth-orb-1"></div>
+    <div class="auth-orb-2"></div>
+
+    <div class="auth-card">
+
+        <!-- Header -->
+        <div class="auth-card-header">
+            <div class="auth-logo-wrap">
+                <div class="auth-logo-ring">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+            </div>
+            <h2 class="auth-header-title">Create Account</h2>
+            <p class="auth-header-sub">Join WAK Publishers for a faster checkout experience!</p>
+        </div>
+
+        <!-- Wave -->
+        <div class="auth-header-wave">
+            <svg viewBox="0 0 480 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="height:24px;">
+                <path d="M0,12 C120,24 360,0 480,12 L480,24 L0,24 Z" fill="white"/>
+            </svg>
+        </div>
+
+        <!-- Body -->
+        <div class="auth-card-body">
+
+            <!-- Perks -->
+            <div class="auth-perks">
+                <span class="auth-perk-pill"><i class="fas fa-bolt"></i> Faster Checkout</span>
+                <span class="auth-perk-pill"><i class="fas fa-history"></i> Order History</span>
+                <span class="auth-perk-pill"><i class="fas fa-shield-alt"></i> Secure Account</span>
+            </div>
+
+            <form method="post" class="space-y-0">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="auth-field">
+                    <label class="auth-label">{{ field.label }}</label>
+                    <div class="auth-input-wrap">
+                        <!-- Icon based on field name -->
+                        {% if 'username' in field.html_name %}
+                            <i class="fas fa-user auth-input-icon"></i>
+                        {% elif 'email' in field.html_name %}
+                            <i class="fas fa-envelope auth-input-icon"></i>
+                        {% elif 'password2' in field.html_name or 'confirm' in field.html_name %}
+                            <i class="fas fa-check-circle auth-input-icon"></i>
+                        {% elif 'password' in field.html_name %}
+                            <i class="fas fa-lock auth-input-icon"></i>
+                        {% else %}
+                            <i class="fas fa-pen auth-input-icon"></i>
+                        {% endif %}
+
+                        <!-- Render the actual Django field but override styling via JS -->
+                        {{ field }}
+
+                        <!-- Show/hide toggle for password fields -->
+                        {% if 'password' in field.html_name %}
+                        <button type="button" class="auth-pw-toggle" onclick="togglePw('{{ field.id_for_label }}', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    {% if field.errors %}
+                    <div class="auth-field-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ field.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="auth-submit-btn">
+                    <i class="fas fa-user-plus text-sm"></i>
+                    Create My Account
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <div class="auth-divider-line"></div>
+                <span class="auth-divider-text">Already a member?</span>
+                <div class="auth-divider-line"></div>
+            </div>
+
+            <p class="auth-footer-text">
+                Already have an account?
+                <a href="{% url 'login' %}">Login here</a>
+            </p>
+
+            <div class="auth-trust-row">
+                <span class="auth-trust-item"><i class="fas fa-shield-alt"></i> Secure Signup</span>
+                <span class="auth-trust-item"><i class="fas fa-lock"></i> SSL Protected</span>
+                <span class="auth-trust-item"><i class="fas fa-star"></i> WAK Publishers</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// Style all Django-rendered form inputs
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".auth-input-wrap input").forEach(function (input) {
+        input.classList.add(
+            "auth-input",
+            "w-full"
+        );
+        // Remove any default Django widget classes that conflict
+        input.style.cssText = "";
+        // If it's a password field, add right padding for the toggle button
+        if (input.type === "password") {
+            input.style.paddingRight = "44px";
+        }
+    });
+});
+
+function togglePw(id, btn) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+        btn.style.color = '#1e3a8a';
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+        btn.style.color = '';
+    }
+}
+</script>
+
+{% endblock %}

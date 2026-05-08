@@ -1,0 +1,40 @@
+hello world {% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-gray-50 py-16 min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-md border border-gray-100">
+            
+            <div class="text-center mb-10">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-brandDarkBlue mb-4">Return & Refund Policy</h1>
+                <div class="w-20 h-1 bg-brandSky mx-auto rounded-full"></div>
+            </div>
+
+            <div class="space-y-6 text-gray-600 leading-relaxed">
+                
+                <div>
+                    <h3 class="text-xl font-bold text-brandDarkBlue mb-2">Refund Process</h3>
+                    <p>To request a refund for a book, please contact our customer support team at <a href="mailto:wakpublishers@gmail.com" class="text-brandSky hover:underline">wakpublishers@gmail.com</a> or <strong>+92 328 6042977</strong> with your order details and reason for the refund. We will guide you through the return process and provide instructions on how to ship the item back to us.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-brandDarkBlue mb-2">Damaged or Defective Items</h3>
+                    <p>If you receive a damaged or defective book, please contact us immediately for assistance. We will arrange for a replacement or issue a refund, as appropriate. Please provide photographs of the damaged item to expedite the process.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-brandDarkBlue mb-2">Refund Processing Time</h3>
+                    <p>Refunds for returned books will be processed within <strong>04 business days</strong> upon receipt and inspection of the returned item. It may take additional time for the refund to reflect in your account, depending on your payment method and financial institution.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-brandDarkBlue mb-2">Policy Changes</h3>
+                    <p>We reserve the right to modify or update our refund policy at any time. Any changes will be effective immediately upon posting on our website.</p>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
