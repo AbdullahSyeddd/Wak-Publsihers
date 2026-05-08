@@ -264,11 +264,13 @@
                          class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
                     <div class="book-card-overlay"></div>
 
-                    {% if book.stock <= 0 %}
-                        <div class="book-badge book-badge--out">Out of Stock</div>
+                {% if book.stock <= 0 or not book.is_active %}
+                        <div class="absolute top-3 right-3 bg-gray-800 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg z-10">
+                            Out of Stock
+                        </div>
                     {% elif book.discount_price %}
-                        <div class="book-badge book-badge--sale">
-                            <i class="fas fa-bolt text-[9px]"></i> Sale
+                        <div class="absolute top-3 right-3 bg-red-500 text-white text-[11px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg z-10">
+                            Sale
                         </div>
                     {% endif %}
 
@@ -301,14 +303,14 @@
                             {% endif %}
                         </div>
 
-                        {% if book.stock > 0 %}
-                            <button onclick="addToCart({{ book.id }})" class="book-cart-btn">
-                                <i class="fas fa-cart-plus"></i>
+                        {% if book.stock > 0 and book.is_active %}
+                            <button onclick="addToCart({{ book.id }})" class="w-full bg-brandDarkBlue text-white font-bold py-3 px-4 rounded-xl hover:bg-brandSky hover:shadow-lg hover:shadow-brandSky/40 transition-all duration-300 flex items-center justify-center gap-2 transform active:scale-95">
+                                <i class="fas fa-cart-plus text-lg"></i> 
                                 <span>Add to Cart</span>
                             </button>
                         {% else %}
-                            <button disabled class="book-cart-btn book-cart-btn--disabled">
-                                <i class="fas fa-ban"></i>
+                            <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-3 px-4 rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
+                                <i class="fas fa-ban text-lg"></i> 
                                 <span>Out of Stock</span>
                             </button>
                         {% endif %}

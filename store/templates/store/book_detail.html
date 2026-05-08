@@ -569,8 +569,10 @@
                 <div class="detail-img-panel">
                     <img src="{{ book.get_image }}" alt="{{ book.title }}" class="detail-book-img">
 
-                    {% if book.stock <= 0 %}
-                        <div class="detail-out-badge"><i class="fas fa-ban text-[9px] mr-1"></i>Out of Stock</div>
+                    {% if book.stock <= 0 or not book.is_active %}
+                        <div class="detail-out-badge" style="background-color: #ef4444; color: white; border-color: #ef4444;">
+                            <i class="fas fa-ban text-[9px] mr-1"></i>Out of Stock
+                        </div>
                     {% elif book.discount_price %}
                         <div class="detail-sale-badge"><i class="fas fa-bolt text-[9px]"></i> Sale</div>
                     {% endif %}
@@ -602,26 +604,28 @@
                 </p>
 
                 <!-- Price Block -->
-                <div class="detail-price-block">
-                    <div>
+                    <div class="detail-price-block">
+                        <div>
+                            {% if book.discount_price %}
+                                <div class="detail-price-main detail-price-main--sale">Rs {{ book.discount_price }}</div>
+                                <div class="detail-price-old">Rs {{ book.price }}</div>
+                            {% else %}
+                                <div class="detail-price-main">Rs {{ book.price }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- YAHAN SIRF EK DAFA AAYEGA "YOU SAVE" -->
                         {% if book.discount_price %}
-                            <div class="detail-price-main detail-price-main--sale">Rs {{ book.discount_price }}</div>
-                            <div class="detail-price-old">Rs {{ book.price }}</div>
-                        {% else %}
-                            <div class="detail-price-main">Rs {{ book.price }}</div>
+                            <div class="detail-save-badge">
+                                <i class="fas fa-tag text-[10px]"></i>
+                                You Save Rs <script>document.write(({{ book.price }} - {{ book.discount_price }}).toFixed(2).replace(/\.00$/, ''));</script>
+                            </div>
                         {% endif %}
                     </div>
-                    {% if book.discount_price %}
-                        <div class="detail-save-badge">
-                            <i class="fas fa-tag text-[10px]"></i>
-                            You Save Rs {{ book.price|add:"-"|add:book.discount_price }}
-                        </div>
-                    {% endif %}
-                </div>
 
                 <!-- Stock -->
-                <div class="detail-stock-row">
-                    {% if book.stock > 0 %}
+                    <div class="detail-stock-row">
+                    {% if book.stock > 0 and book.is_active %}
                         <span class="stock-dot stock-dot--in"></span>
                         <span class="stock-text--in">In Stock</span>
                         <span style="color:#cbd5e1; font-size:0.75rem;">&bull;</span>
@@ -652,7 +656,7 @@
 
                 <!-- Action Buttons -->
                 <div class="flex gap-3 flex-wrap">
-                    {% if book.stock > 0 %}
+                    {% if book.stock > 0 and book.is_active %}
                         <button onclick="addToCart({{ book.id }})" class="detail-cart-btn">
                             <i class="fas fa-shopping-cart"></i>
                             Add to Cart

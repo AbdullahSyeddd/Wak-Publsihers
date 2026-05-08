@@ -409,7 +409,7 @@
                     <img src="{{ book.get_image }}" alt="{{ book.title }}">
                     <div class="book-img-overlay"></div>
 
-                    {% if book.stock <= 0 %}
+                {% if book.stock <= 0 or not book.is_active %}
                         <div class="book-badge book-badge--out">
                             <i class="fas fa-ban text-[9px]"></i> Out of Stock
                         </div>
@@ -444,7 +444,7 @@
                         </div>
 
                         <!-- Cart Button -->
-                        {% if book.stock > 0 %}
+                    {% if book.stock > 0 and book.is_active %}
                             <button onclick="addToCart({{ book.id }})" class="book-cart-btn">
                                 <i class="fas fa-cart-plus"></i>
                                 <span>Add to Cart</span>

@@ -14,7 +14,7 @@ from django.contrib.auth import login
 from .forms import CustomerSignUpForm
 
 def home(request):
-    books = Book.objects.filter(is_active=True)
+    books = Book.objects.all()
     categories = Category.objects.filter(parent__isnull=True) 
 
     # 1. Search Logic
@@ -48,13 +48,13 @@ def home(request):
     return render(request, 'store/home.html', context)
 
 def book_detail(request, slug):
-    book = get_object_or_404(Book, slug=slug, is_active=True)
+    book = get_object_or_404(Book, slug=slug)
     return render(request, 'store/book_detail.html', {'book': book})
 
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     categories_to_include = [category] + list(category.children.all())
-    books = Book.objects.filter(category__in=categories_to_include, is_active=True)
+    books = Book.objects.filter(category__in=categories_to_include)
     return render(request, 'store/category.html', {'category': category, 'books': books})
 
 # ==========================================================
