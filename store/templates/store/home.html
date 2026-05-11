@@ -254,7 +254,7 @@
 
     <!-- Books Grid Wrapper -->
     <div id="books-wrapper" class="transition-opacity duration-300">
-        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 xl:gap-8">
+        <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 
             {% for book in books %}
             <!-- Book Card -->
@@ -780,7 +780,7 @@
 .book-card-img-wrap {
     display: block;
     width: 100%;
-    height: 280px;
+    height: 200px;
     background: #f8faff;
     position: relative;
 }
@@ -841,7 +841,7 @@
     transform: translateX(-50%) translateY(0);
 }
 
-.book-card-body { padding: 20px; }
+.book-card-body { padding: 12px 14px; }
 .book-cat-tag {
     display: inline-block;
     font-size: 0.7rem;
@@ -854,7 +854,7 @@
     border-radius: 50px;
 }
 .book-title {
-    font-size: 0.98rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #1e3a8a;
     line-height: 1.45;
@@ -867,7 +867,7 @@
 .book-card:hover .book-title { color: #0ea5e9; }
 
 .book-price-main {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 800;
     color: #1e3a8a;
     font-family: 'Playfair Display', serif;
@@ -899,7 +899,7 @@
     color: white;
     font-weight: 700;
     font-size: 0.88rem;
-    padding: 13px 16px;
+    padding: 10px 16px;
     border-radius: 14px;
     transition: all 0.3s;
     border: none;
@@ -986,7 +986,7 @@ function setView(view) {
         const btn = document.getElementById('btn-grid3');
         if(btn) btn.classList.add('view-toggle-btn--active');
     } else {
-        grid.classList.add('grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4');
+        grid.classList.add('grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-5');
         const btn = document.getElementById('btn-grid4');
         if(btn) btn.classList.add('view-toggle-btn--active');
     }
